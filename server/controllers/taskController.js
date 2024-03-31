@@ -1,11 +1,12 @@
-const Task = require('../models/taskModel');
 const mongoose = require('mongoose');
+const Tasks = require('../models/taskModel');
+const User = require('../models/userModel');
+const Project = require('../models/projectModel');
 
-
-//get all projects
+//get all Tasks
 const getAllTasks = async  (req, res)=>{
     try{
-        const  task = await Task.find();
+        const  task = await Tasks.find();
         res.status(200).json(task);
 
     }catch (error){
@@ -13,10 +14,10 @@ const getAllTasks = async  (req, res)=>{
     }
 }
 
-//get single project using ID
+//get single Task using ID
 const getTaskById = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
+        const task = await Tasks.findById(req.params.idtask);
         if (!task) {
             return res.status(404).json({ error: "Task not found" });
         }
@@ -26,43 +27,71 @@ const getTaskById = async (req, res) => {
     }
 }
 
-//creating project
+//creating Task
 const createTask = async (req, res) => {
     try {
+        // const task = await Tasks.create(req.body);
         const task = req.body;
-        const newTask = new Project(task);
+        const newTask = new Tasks(task);
         await newTask.save();
         res.status(201).json({ message: 'Task created successfully' });
+
     } catch (error) {
         res.status(500).json({ message: 'An error occurred' });
     }
 }
 
-//updating Project
+//updating Task
 
 const  updateTask= async (req, res) => {
     try {
-        const { id } = req.params;
-        const task = req.body;
-        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No Task with id: ${id}`);
-        const updatedProject = await Project.findByIdAndUpdate(id, task, { new: true });
-        res.status(200).json(updateTask);
+
+
+        const task = await Tasks.findByIdAndUpdate(req.params.idtask,
+            req.body,
+            {new :true, runValidators: true});
+        if(!task) {
+            res.status(404).send(`No Task with id`);
+        }{
+            res.status(200).send("Task updated successfully")
+        }
     } catch (error) {
         res.status(500).json({ message: 'An error occurred' });
     }
 }
 
-// delete a Project
+// delete a Task
 const deleteTask = async (req, res) => {
     try {
-        const task = await Task.findByIdAndDelete(req.params.id);
+        const task = await Tasks.findByIdAndDelete(req.params.idtask);
+        console.log(req.params.idtask + "xxx");
         if (!task) {
             return res.status(404).json({ error: "Task not found" });
         }
         res.json({ message: "Task deleted successfully" });
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
-module.exports = { getAllTasks, getTaskById, createProject, updateTask, deleteTask };
+
+
+
+//push task to a project
+const newTask = async (req,res) => {
+    try{
+        const task= await  Tasks.create(req.body);
+        console.log(task.id);
+        await Project.findByIdAndUpdate(req.params.idproject, {
+            $push : {
+                Tasks: task.id, //not the id of the params created by mongodb
+            },
+    });
+    console.log("xxx"+ task);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = { getAllTasks, getTaskById, newTask, createTask, updateTask, deleteTask }; //createTask,

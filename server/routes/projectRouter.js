@@ -4,10 +4,10 @@ const authenticate = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.get('/', projectController.getAllProjects);
-router.get('/:id', projectController.getProjectById);
-router.post('/', authenticate.authenticate, authenticate.authorize, projectController.createProject);
-router.put('/:id', authenticate.authenticate, authenticate.authorize, projectController.updateProject);
-router.delete('/:id', authenticate.authenticate, authenticate.authorize , projectController.deleteProject);
+router.get('/allprojects', projectController.getAllProjects);
+router.get('/getsingleproject/:idproject', projectController.getProjectById);
+router.post('/newproject', projectController.createProject); //authenticate.authenticate, authenticate.authorize,
+router.patch('/updateproject/:idproject',  projectController.updateProject); //authenticate.authenticate, authenticate.authorize,
+router.delete('/deleteproject/:idproject', projectController.deleteProject); // authenticate.authenticate, authenticate.authorize ,
 
 module.exports = router;

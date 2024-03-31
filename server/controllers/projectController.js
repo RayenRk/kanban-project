@@ -1,5 +1,5 @@
 const Project = require('../models/projectModel');
-const mongoose = require('mongoose');
+const Task = require('../models/taskModel');
 
 
 
@@ -7,8 +7,9 @@ const mongoose = require('mongoose');
 const getAllProjects = async  (req, res)=>{
     try{
         const  projects = await Project.find();
-        res.status(200).json(projects);
 
+        //console.log(projects);
+        res.status(200).json(projects);
     }catch (error){
         res.status(500).json({message: 'An Error occurred'});
     }
@@ -17,7 +18,7 @@ const getAllProjects = async  (req, res)=>{
 //get single project using ID
 const getProjectById = async (req, res) => {
     try {
-        const project = await Project.findById(req.params.id);
+        const project = await Project.findById(req.params.idproject);
         if (!project) {
             return res.status(404).json({ error: "project not found" });
         }
@@ -30,12 +31,18 @@ const getProjectById = async (req, res) => {
 //creating project
 const createProject = async (req, res) => {
     try {
+
+        // const project = await Project.create(req.body);
+        // console.log(project);
+        // if(project){
+        //     res.status(201).json({ message: 'Project created successfully' });
+        // }
         const project = req.body;
         const newProject = new Project(project);
         await newProject.save();
         res.status(201).json({ message: 'Project created successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'An error occurred' });
+        res.status(500).json({ error: 'An error occurred' });
     }
 }
 
@@ -43,11 +50,18 @@ const createProject = async (req, res) => {
 
 const  updateProject= async (req, res) => {
     try {
-        const { id } = req.params;
-        const project = req.body;
-        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No project with id: ${id}`);
-        const updatedProject = await Project.findByIdAndUpdate(id, project, { new: true });
-        res.status(200).json(updatedProject);
+        const PROJECT = await Project.findById(req.params.idproject);
+        console.log(PROJECT);
+
+        const project = await Project.findByIdAndUpdate(req.params.idproject,
+            req.body,
+            {new :true, runValidators: true});
+        if(!project) {
+            res.status(404).send(`No project with id`);
+        }{
+            res.status(200).send("Project updated succesflly")
+        }
+
     } catch (error) {
         res.status(500).json({ message: 'An error occurred' });
     }
@@ -56,7 +70,7 @@ const  updateProject= async (req, res) => {
 // delete a Project
 const deleteProject = async (req, res) => {
     try {
-        const project = await Project.findByIdAndDelete(req.params.id);
+        const project = await Project.findByIdAndDelete(req.params.idproject);
         if (!project) {
             return res.status(404).json({ error: "Pproject not found" });
         }

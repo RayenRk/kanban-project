@@ -5,6 +5,9 @@ const userRouter = require('./routes/userRouter');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const projectRouter = require('./routes/projectRouter');
+const taskRouter = require('./routes/taskRouter'); //error her
+
 
 const app = express();
 
@@ -14,8 +17,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/', indexRouter);
-app.use('/api/auth/', authRouter);
-app.use('/api/user/', userRouter);
+app.use('/api', indexRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
+app.use('/projectRouter',projectRouter);
+app.use('/taskRouter',taskRouter); //error here
+
 
 module.exports = app;
