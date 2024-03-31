@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('./userModel');
-const Project = require('./projectModel');
+
 
 
 const status = Object.freeze({

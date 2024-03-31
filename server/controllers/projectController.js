@@ -15,6 +15,19 @@ const getAllProjects = async  (req, res)=>{
     }
 }
 
+const findTasksOfEachProject = async (req, res)  => {
+    try {
+        const project = await Project.findById(req.params.idproject).populate('tasks');
+        if(!project){
+            return res.status(404).json({ error: "project not found" });
+        }
+        res.json(project);
+
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}
+
 //get single project using ID
 const getProjectById = async (req, res) => {
     try {
@@ -80,4 +93,4 @@ const deleteProject = async (req, res) => {
     }
 }
 
-module.exports = { getAllProjects, getProjectById, createProject, updateProject, deleteProject };
+module.exports = { getAllProjects, getProjectById, createProject, updateProject, deleteProject,findTasksOfEachProject };
