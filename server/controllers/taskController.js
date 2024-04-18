@@ -1,23 +1,20 @@
-const mongoose = require('mongoose');
-const Tasks = require('../models/taskModel');
+const Task = require('../models/taskModel');
 const User = require('../models/userModel');
-const Project = require('../models/projectModel');
 
-//get all Tasks
-const getAllTasks = async  (req, res)=>{
-    try{
-        const  task = await Tasks.find();
-        res.status(200).json(task);
-
-    }catch (error){
-        res.status(500).json({message: 'An Error occurred'});
+// Fonction pour récupérer toutes les tâches
+const getAllTasks = async (req, res) => {
+    try {
+        const tasks = await Task.find();
+        res.status(200).json(tasks);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
-//get single Task using ID
+// Fonction pour récupérer une tâche par son ID
 const getTaskById = async (req, res) => {
     try {
-        const task = await Tasks.findById(req.params.idtask);
+        const task = await Task.findById(req.params.idtask);
         if (!task) {
             return res.status(404).json({ error: "Task not found" });
         }
@@ -27,101 +24,68 @@ const getTaskById = async (req, res) => {
     }
 }
 
-//creating Task
+// Fonction pour créer une nouvelle tâche
 const createTask = async (req, res) => {
     try {
-        // const task = await Tasks.create(req.body);
         const task = req.body;
-        const newTask = new Tasks(task);
+        const newTask = new Task(task);
         await newTask.save();
-        res.status(201).json({ message: 'Task created successfully' });
-
+        res.status(201).json({ message: 'Task created successfully', task: newTask });
     } catch (error) {
-        res.status(500).json({ message: 'An error occurred' });
+        res.status(500).json({ error: error.message });
     }
 }
 
-//updating Task
-
-const  updateTask= async (req, res) => {
+// Fonction pour mettre à jour une tâche
+const updateTask = async (req, res) => {
     try {
-
-
-        const task = await Tasks.findByIdAndUpdate(req.params.idtask,
-            req.body,
-            {new :true, runValidators: true});
-        if(!task) {
-            res.status(404).send(`No Task with id`);
-        }{
-            res.status(200).send("Task updated successfully")
+        const task = await Task.findByIdAndUpdate(req.params.idtask, req.body, { new: true });
+        if (!task) {
+            return res.status(404).json({ error: "Task not found" });
         }
+        res.status(200).json({ message: 'Task updated successfully', task: task });
     } catch (error) {
-        res.status(500).json({ message: 'An error occurred' });
+        res.status(500).json({ error: error.message });
     }
 }
 
-// delete a Task
+// Fonction pour supprimer une tâche
 const deleteTask = async (req, res) => {
     try {
-        const task = await Tasks.findByIdAndDelete(req.params.idtask);
-        console.log(req.params.idtask + "xxx");
+        const task = await Task.findByIdAndDelete(req.params.idtask);
         if (!task) {
             return res.status(404).json({ error: "Task not found" });
         }
         res.json({ message: "Task deleted successfully" });
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
-
-
-
-//push task to a project
-// const newTask = async (req,res) => {
-//     try{
-//         const task= await  Tasks.create(req.body);
-//         console.log("xxxx"+task.id);
-//         const project = await Project.findByIdAndUpdate(
-//             req.params.idproject,
-//             { $push: { tasks: task.id } },
-//             { new: true },
-//             );
-//         if(!project){
-//             return res.status(404).send('Project not found');
-//         }
-//
-//
-//         // , {
-//         //     $push : {
-//         //         Tasks: task.id, //not the id of the params created by mongodb
-//         //     },
-//         // });
-//         console.log("xxx"+ task.id);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
-const newTask = async (req, res) => {
+// Fonction pour affecter une tâche à un utilisateur
+const assignTask = async (req, res) => {
     try {
-        const task = await Tasks.create(req.body);
-        console.log(task.id);
+        const taskId = req.params.idtask;
+        const userId = req.body.userId;
 
-        const project = await Project.findByIdAndUpdate(
-            req.params.idproject,
-            { $push: { tasks: task.id } },
-            { new: true }
-        );
-        if (!project) {
-            return res.status(404).send('Project not found');
-        } else {
-            res.status(201).json({ project: project, task: task });
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ error: "Task not found" });
         }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Mettre à jour la tâche avec l'ID de l'utilisateur responsable
+        task.responsible = userId;
+        await task.save();
+
+        res.status(200).json({ message: "Task assigned successfully", task: task });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-};
+}
 
-
-module.exports = { getAllTasks, getTaskById, newTask, createTask, updateTask, deleteTask }; //createTask,
+module.exports = { getAllTasks, getTaskById, createTask, updateTask, deleteTask, assignTask };
