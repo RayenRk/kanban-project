@@ -1,108 +1,43 @@
-.users-container {
-    width: 400px;
-    max-width: 100%;
-    margin: 0 25px 25px 0;
-    display: inline-block;
-    vertical-align: top;
-  }
-  
-  .users-list {
-    border: solid 1px #ccc;
-    min-height: 60px;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    display: block;
-  }
-  
-  .user {
-    padding: 20px 16px;
-    border-bottom: solid 1px #ccc;
-    color: rgba(0, 0, 0, 0.87);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    cursor: move;
-    background: white;
-    font-size: 14px;
-  }
-  
-  .user:last-child {
-    border: none;
-  }
-  
-  .cdk-drag-preview {
-    box-sizing: border-box;
-    border-radius: 8px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-      0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
-  }
-  
-  .cdk-drag-placeholder {
-    opacity: 0;
-  }
-  
-  .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
-  
-  .users-list.cdk-drop-list-dragging .user:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
+/* kanban.component.css or global stylesheet */
 
-  .example-container {
-    width: 300px;
-    max-width: 100%;
-    margin: 0 25px 25px 0;
-    display: inline-block;
-    vertical-align: top;
+.kanban-nav {
+    display: flex; /* Arrange links horizontally */
+    justify-content: space-between; /* Evenly distribute links */
+    align-items: center; /* Align vertically for consistency */
+    padding: 1rem 2rem; /* Add some padding for visual appeal */
+    background-color: #f5f5f5; /* Light background for better contrast */
+    border-bottom: 1px solid #ddd; /* Subtle bottom border */
   }
   
-  .example-list {
-    border: solid 1px #ccc;
-    min-height: 60px;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    display: block;
+  .kanban-nav-link {
+    text-decoration: none; /* Remove underline from links */
+    color: #333; /* Darker text for readability */
+    font-weight: bold; /* Add emphasis to navigation links */
+    margin-right: 1rem; /* Add spacing between links */
+  
+    /* Optional: Hover effect */
+    transition: color 0.2s ease-in-out;
   }
   
-  .example-box {
-    padding: 20px 10px;
-    border-bottom: solid 1px #ccc;
-    color: rgba(0, 0, 0, 0.87);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    cursor: move;
-    background: white;
-    font-size: 14px;
+  .kanban-nav-link:hover {
+    color: #007bff; /* Blue hover color for visual feedback */
   }
   
-  .cdk-drag-preview {
-    box-sizing: border-box;
-    border-radius: 8px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
-  }
-  
-  .cdk-drag-placeholder {
-    opacity: 0;
-  }
-  
-  .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
-  
-  .example-box:last-child {
+  .kanban-nav-button {
+    /* Reset button styles for a cleaner base */
     border: none;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    cursor: pointer; /* Indicate clickable behavior */
+    color: #333; /* Darker text for readability */
+    font-weight: bold; /* Add emphasis to navigation options */
+    margin-right: 1rem; /* Add spacing between buttons */
+  
+    /* Optional: Hover effect */
+    transition: background-color 0.2s ease-in-out;
   }
   
-  .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }  
+  .kanban-nav-button:hover {
+    background-color: #f5f5f5; /* Light background on hover */
+  }
+  

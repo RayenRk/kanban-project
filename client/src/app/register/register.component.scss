@@ -1,0 +1,25 @@
+.input-field {
+  appearance: none;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #48bb78;
+}
+
+.btn-primary {
+  padding: 1rem 2rem;
+  background-color: #48bb78;
+  color: #fff;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #38a169;
+}
