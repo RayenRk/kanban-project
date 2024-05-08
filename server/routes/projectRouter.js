@@ -10,5 +10,6 @@ router.post('/newproject', projectController.createProject); //authenticate.auth
 router.patch('/updateproject/:idproject',  projectController.updateProject); //authenticate.authenticate, authenticate.authorize,
 router.delete('/deleteproject/:idproject', projectController.deleteProject); // authenticate.authenticate, authenticate.authorize ,
 router.get('/FTOEP/:idproject', projectController.findTasksOfEachProject); // authenticate.authenticate, authenticate.authorize ,
+router.patch('/addUserToProject/:idproject/:userID',  projectController.addUserToProject); //authenticate.authenticate, authenticate.authorize,
 
 module.exports = router;

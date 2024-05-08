@@ -48,9 +48,9 @@ const login = async (req, res) => {
                 // Create a JWT token
                 const token = jwt.sign({ username: user.username, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 // Attach the token to the response header
-                // res.json({ token });
-                res.setHeader('Authorization', token);
-                res.status(200).json({ message: 'User logged in successfully' });
+                 res.json({ token });
+               // res.setHeader('Authorization', token); fixed login error
+                //res.status(200).json({ message: 'User logged in successfully' });
             }
         }
     } catch (error) {

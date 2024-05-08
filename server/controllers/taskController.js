@@ -17,7 +17,7 @@ const getAllTasks = async  (req, res)=>{
 //get single Task using ID
 const getTaskById = async (req, res) => {
     try {
-        const task = await Tasks.findById(req.params.idtask);
+        const task = await Tasks.findById(req.params.idtask).populate("responsible");
         if (!task) {
             return res.status(404).json({ error: "Task not found" });
         }
@@ -74,40 +74,33 @@ const deleteTask = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+const addUserToTask = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (user) {
+            const task = await Tasks.findByIdAndUpdate(req.params.taskId,
+                {responsible: req.params.userId},
+                {new: true, runValidators: true});
+            if (!task) {
+                return res.status(404).json({error: "Task not found"});
+            } else {
+                return res.status(200).json({error: "Task updated successfully"});
+
+            }
+        } else {
+            return res.status(404).json({error: "User not found"});
+        }
+    }catch (error){
+        return res.status(404).json({error})
+    }
+};
 
 
 
-
-//push task to a project
-// const newTask = async (req,res) => {
-//     try{
-//         const task= await  Tasks.create(req.body);
-//         console.log("xxxx"+task.id);
-//         const project = await Project.findByIdAndUpdate(
-//             req.params.idproject,
-//             { $push: { tasks: task.id } },
-//             { new: true },
-//             );
-//         if(!project){
-//             return res.status(404).send('Project not found');
-//         }
-//
-//
-//         // , {
-//         //     $push : {
-//         //         Tasks: task.id, //not the id of the params created by mongodb
-//         //     },
-//         // });
-//         console.log("xxx"+ task.id);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
 const newTask = async (req, res) => {
     try {
         const task = await Tasks.create(req.body);
-        console.log(task.id);
-
+        const PROJECT = await project.findById(req.params)
         const project = await Project.findByIdAndUpdate(
             req.params.idproject,
             { $push: { tasks: task.id } },
@@ -124,4 +117,4 @@ const newTask = async (req, res) => {
 };
 
 
-module.exports = { getAllTasks, getTaskById, newTask, createTask, updateTask, deleteTask }; //createTask,
+module.exports = { getAllTasks, getTaskById, newTask, createTask, updateTask, deleteTask,addUserToTask }; //createTask,
