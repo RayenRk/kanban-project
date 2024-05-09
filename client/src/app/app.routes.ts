@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { DragDropComponent } from './drag-drop/drag-drop.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProjectsComponent } from './projects/projects.component';
-import { TasksComponent } from './tasks/tasks.component';
-import { UsersComponent } from './users/users.component';
+import { DragDropComponent } from './components/drag-drop/drag-drop.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ProjectsComponent } from './components/projects/projects.component';
+import { TasksComponent } from './components/tasks/tasks.component';
+import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, 
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }, 
   { path: 'dashboard', component: DashboardComponent },// Redirect root path to drag-drop
   { path: 'board', component: DragDropComponent }, // Drag & Drop route
   { path: 'login', component: LoginComponent }, // Login route
