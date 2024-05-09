@@ -17,7 +17,7 @@ const getAllTasks = async  (req, res)=>{
 //get single Task using ID
 const getTaskById = async (req, res) => {
     try {
-        const task = await Tasks.findById(req.params.idtask).populate("responsible");
+        const task = await Tasks.findById(req.params.idtask).populate("responsible",{username:1});
         if (!task) {
             return res.status(404).json({ error: "Task not found" });
         }
