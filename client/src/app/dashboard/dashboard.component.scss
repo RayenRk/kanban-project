@@ -1,0 +1,17 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 100vh;
+    background-color: white;
+    border-right: 1px solid #e5e7eb; /* Adjust border color if needed */
+    z-index: 50; /* Keep sidebar on top */
+  }
+
+  .sidebar-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-grow: 1;
+    margin-top: 64px; /* Adjust top margin to avoid overlapping with the nav */
+  }

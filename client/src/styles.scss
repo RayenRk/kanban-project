@@ -6,3 +6,14 @@
 .font-nunito {
   font-family: nunito, sans-serif;
 }
+
+.icon-wrapper {
+  display: inline-block;
+  border-radius: 50%; /* Use 50% to make it perfectly round */
+  overflow: hidden;
+}
+
+.icon {
+  width: 32px; /* Set the width and height of the icon */
+  height: 32px;
+}
