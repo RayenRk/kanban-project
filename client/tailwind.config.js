@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-  ],
+  ],  
   theme: {
     fontFamily: {
       'nunito': ['nunito', 'sans-serif']
