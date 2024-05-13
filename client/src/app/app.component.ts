@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { DragDropComponent } from './components/drag-drop/drag-drop.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -19,28 +19,48 @@ import { CommonModule } from '@angular/common';
   imports: [RouterOutlet, DragDropComponent,CommonModule,
     DashboardComponent,UsersComponent,TasksComponent,
     ProjectsComponent,LoginComponent,RegisterComponent,HttpClientModule],
-    
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  title= 'Kanban Board';
-  showNavbar: boolean = true;
-  isLoggedIn$ = this.apiService.isLoggedIn$;
+export class AppComponent implements AfterViewInit {
+  title = 'Kanban Board';
+  isLoggedIn: boolean = false; // Initially set logged in to false
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) {}
+
+  ngAfterViewInit() {
+    // Check for existing login on app load
+    this.checkLoginStatus();
+  }
+
+  checkLoginStatus() {
+    // Replace with your specific logic to check for a stored token
+    const storedToken = localStorage.getItem('userToken');
+    this.isLoggedIn = !!storedToken;  // Set isLoggedIn based on token presence
+  }
+
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.showNavbar = !['/login', '/register'].includes(event.url);
+        this.isLoggedIn = !['/login', '/register'].includes(event.url);
       }
     });
+
+    // Check for existing login on app load (optional)
+    this.checkLoginStatus();
   }
 
   logout() {
-    this.apiService.logout().subscribe(() => {
-      this.apiService.setIsLoggedIn(false);
+    this.apiService.logout().subscribe(response => {
+      // Handle successful logout response (optional)
+      console.log('Logout successful:', response);
+      localStorage.removeItem('userToken'); // Example: remove stored token
+
+      // Redirect to login page after logout
       this.router.navigate(['/login']);
+    }, error => {
+      // Handle logout error (optional)
+      console.error('Logout error:', error);
     });
   }
 }

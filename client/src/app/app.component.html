@@ -1,4 +1,4 @@
-<nav class="bg-gray-900 shadow-lg" *ngIf="showNavbar">
+<nav class="bg-gray-900 shadow-lg" *ngIf="isLoggedIn">
     <div class="container mx-auto px-7 py-3 md:flex md:justify-between md:items-center">
       <div class="flex justify-between items-center">
         <a class="text-xl font-bold text-white" href="/">
@@ -20,32 +20,14 @@
           <a href="/new-project" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">New Project</a>
           <a href="/new-user" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">New User</a>
         </div>
-        <div *ngIf="isLoggedIn$ | async; else loggedOut">
-          <div class="flex flex-col md:flex-row md:mx-6">
-            <button (click)="logout()" class="my-1 text-sm text-white hover:text-gray-300 md:mx-4 md:my-0">
-              <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-              </svg>
-              Logout
-            </button>
-          </div>
+        <div class="flex flex-col md:flex-row md:mx-6">
+          <a (click)="logout()" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">
+            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Logout
+          </a>
         </div>
-        <ng-template #loggedOut>
-          <div class="flex flex-col md:flex-row md:mx-6">
-            <a href="/login" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">
-              <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
-              Login
-            </a>
-            <a href="/register" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">
-              <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-              </svg>
-              Register
-            </a>
-          </div>
-        </ng-template>
       </div>
     </div>
   </nav>
