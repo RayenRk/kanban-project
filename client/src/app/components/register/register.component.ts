@@ -8,7 +8,7 @@ import { User } from '../../models/users'; // Import the User interface
   selector: 'app-register',
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './register.component.html',
+  templateUrl: './register.component.html',   
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
@@ -47,6 +47,8 @@ export class RegisterComponent implements OnInit {
         // Handle successful registration
         console.log('Registration successful:', response);
         // Redirect or perform other actions as needed
+        this.router.navigate(['/login']);
+
       },
       (error) => {
         // Handle registration error

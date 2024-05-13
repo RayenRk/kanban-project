@@ -1,33 +1,42 @@
-<form [formGroup]="registerForm" (submit)="register()" class="space-y-5">
-  <div class="flex flex-col">
-      <label for="username" class="text-gray-500 mb-1">Username</label>
-      <input type="text" id="username" placeholder="Please insert your username"
-          class="input-field" formControlName="username">
-  </div>
-  <div class="flex flex-col">
-      <label for="email" class="text-gray-500 mb-1">Email</label>
-      <input type="text" id="email" placeholder="Please insert your email"
-          class="input-field" formControlName="email">
-  </div>
-  <div class="flex flex-col">
-      <label for="password" class="text-gray-500 mb-1">Password</label>
-      <input type="password" id="password" placeholder="Please insert your password"
-          class="input-field" formControlName="password">
-  </div>
-  <div class="flex flex-col">
-      <label for="role" class="text-gray-500 mb-1">Role</label>
-      <select id="role" class="input-field" formControlName="role">
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-          <option value="po">Project Owner</option>
-      </select>
-  </div>
-  <div class="flex justify-between">
-      <button type="submit"
-          class="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
-          Create Account
-      </button>
-      <a href="/login"
-          class="w-full py-3 bg-blue-600 text-white rounded-lg text-center hover:bg-blue-700">Login</a>
-  </div>
-</form>
+<section class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+      <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+        <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
+        Kanban Management
+      </a>
+      <div class="w-full max-w-md bg-white rounded-lg shadow-lg dark:border dark:border-gray-700 hover:shadow-xl transition duration-300">
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            Create your account
+          </h1>
+          <form [formGroup]="registerForm" (submit)="register()" class="space-y-4 md:space-y-6">
+            <div class="flex flex-col">
+              <label for="username" class="text-gray-500 mb-1">Username</label>
+              <input type="text" id="username" placeholder="Please insert your username" class="input-field" formControlName="username">
+            </div>
+            <div class="flex flex-col">
+              <label for="email" class="text-gray-500 mb-1">Email</label>
+              <input type="email" id="email" placeholder="Please insert your email" class="input-field" formControlName="email">
+            </div>
+            <div class="flex flex-col">
+              <label for="password" class="text-gray-500 mb-1">Password</label>
+              <input type="password" id="password" placeholder="Please insert your password" class="input-field" formControlName="password">
+            </div>
+            <div class="flex flex-col">
+              <label for="role" class="text-gray-500 mb-1">Role</label>
+              <select id="role" class="input-field" formControlName="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <option value="po">Project Owner</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-primary">Sign up</button>
+            <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+              Already have an account? <a href="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  

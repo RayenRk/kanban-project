@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
         // Handle successful login
         console.log('Login successful:', response);
         // Redirect or perform other actions as needed
+        this.router.navigate(['/board']);
       },
       (error) => {
         // Handle login error
@@ -48,7 +49,4 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  openRegistrationPage() {
-    this.router.navigateByUrl("/signup");
-  }
 }

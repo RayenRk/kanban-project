@@ -1,25 +1,29 @@
+/* Input field style */
 .input-field {
-  appearance: none;
-  border: 2px solid #e2e8f0;
-  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
   padding: 0.75rem;
-  outline: none;
+  border-radius: 0.375rem;
+  width: 100%;
   transition: border-color 0.3s ease;
 }
 
 .input-field:focus {
-  border-color: #48bb78;
+  border-color: #2563eb;
 }
 
+/* Primary button style */
 .btn-primary {
-  padding: 1rem 2rem;
-  background-color: #48bb78;
+  width: 100%;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: #fff;
+  background-color: #2563eb;
   border-radius: 0.375rem;
-  cursor: pointer;
   transition: background-color 0.3s ease;
+  border: none;
 }
 
 .btn-primary:hover {
-  background-color: #38a169;
+  background-color: #1e4bb1;
 }

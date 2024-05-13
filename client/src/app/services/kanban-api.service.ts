@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { register } from 'module';
 
 
 @Injectable({
@@ -8,8 +9,16 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
   private apiUrl = 'http://localhost:5000/'; 
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) { }
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
+
+  constructor(private http: HttpClient) {}
+
+
+  setIsLoggedIn(loggedIn: boolean) {
+    this.isLoggedInSubject.next(loggedIn);
+  }
 
   // Authentication Routes
   login(credentials: any): Observable<any> {
