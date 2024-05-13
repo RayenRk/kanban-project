@@ -2,46 +2,44 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:5000/'; // Replace with your API URL
+  private apiUrl = 'http://localhost:5000/'; 
 
   constructor(private http: HttpClient) { }
 
   // Authentication Routes
   login(credentials: any): Observable<any> {
-      return this.http.post(`${this.apiUrl}login`, credentials);
+      return this.http.get(`${this.apiUrl}api/auth/login`, credentials);
   }
 
   register(userData: any): Observable<any> {
-      return this.http.post(`${this.apiUrl}register`, userData);
+      return this.http.post(`${this.apiUrl}api/auth/register`, userData);
   }
 
   logout(): Observable<any> {
-      return this.http.post(`${this.apiUrl}logout`, {});
+      return this.http.post(`${this.apiUrl}api/auth/logout`, {});
   }
 
   // Project Routes
-  getAllProjects(): Observable<any> {
-      return this.http.get(`${this.apiUrl}allprojects`);
-  }
 
-  getProjectById(id: string): Observable<any> {
-      return this.http.get(`${this.apiUrl}getsingleproject/${id}`);
+   getAllProjects(): Observable<any> {
+    return this.http.get(`${this.apiUrl}projectRouter/allprojects`);
   }
 
   createProject(projectData: any): Observable<any> {
-      return this.http.post(`${this.apiUrl}newproject`, projectData);
+    return this.http.post(`${this.apiUrl}projectRouter/newproject`, projectData);
   }
 
   updateProject(id: string, projectData: any): Observable<any> {
-      return this.http.patch(`${this.apiUrl}updateproject/${id}`, projectData);
+    return this.http.patch(`${this.apiUrl}projectRouter/updateproject/${id}`, projectData);
   }
 
   deleteProject(id: string): Observable<any> {
-      return this.http.delete(`${this.apiUrl}deleteproject/${id}`);
+    return this.http.delete(`${this.apiUrl}projectRouter/deleteproject/${id}`);
   }
 
   findTasksOfEachProject(id: string): Observable<any> {
