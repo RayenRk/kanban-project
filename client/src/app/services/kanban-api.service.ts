@@ -13,7 +13,7 @@ export class ApiService {
 
   // Authentication Routes
   login(credentials: any): Observable<any> {
-      return this.http.get(`${this.apiUrl}api/auth/login`, credentials);
+      return this.http.post(`${this.apiUrl}api/auth/login`, credentials);
   }
 
   register(userData: any): Observable<any> {

@@ -3,6 +3,7 @@ const Task = require('../models/taskModel');
 
 
 
+
 //get all projects
 const getAllProjects = async  (req, res)=>{
     try{
@@ -58,7 +59,24 @@ const createProject = async (req, res) => {
         res.status(500).json({ error: 'An error occurred' });
     }
 }
+const addUserToProject = async (req,res) =>{
+    try {
+        const PROJECT = await  Project.findById(req.params.idproject);
+        console.log(PROJECT)
+        const project = await Project.findByIdAndUpdate(req.params.idproject,
 
+            { $push: { members: req.params.userID }},
+        { new: true }
+            );
+        console.log(project)
+        if(!project || !PROJECT) {
+            res.status(404).send(`No project with id`);
+        }{
+            res.status(200).send("Project updated succesflly")
+        }
+    }catch (e){
+    }
+}
 //updating Project
 
 const  updateProject= async (req, res) => {
@@ -80,6 +98,7 @@ const  updateProject= async (req, res) => {
     }
 }
 
+
 // delete a Project
 const deleteProject = async (req, res) => {
     try {
@@ -93,4 +112,4 @@ const deleteProject = async (req, res) => {
     }
 }
 
-module.exports = { getAllProjects, getProjectById, createProject, updateProject, deleteProject,findTasksOfEachProject };
+module.exports = { getAllProjects, getProjectById, createProject, updateProject, deleteProject,findTasksOfEachProject,addUserToProject };
