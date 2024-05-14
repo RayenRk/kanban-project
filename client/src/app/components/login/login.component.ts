@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/kanban-api.service';
-import { User } from '../../models/users'; // Import the User interface
 
 @Component({
   selector: 'app-login',
@@ -13,7 +12,7 @@ import { User } from '../../models/users'; // Import the User interface
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  error: string = ''; // Variable to store error message
+  error: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -35,18 +34,16 @@ export class LoginComponent implements OnInit {
 
     const credentials = this.loginForm.value;
     this.apiService.login(credentials).subscribe(
-      (response: User) => {
-        // Handle successful login
+      (response) => {
         console.log('Login successful:', response);
-        // Redirect or perform other actions as needed
+        this.apiService.setToken(response.token);
+        localStorage.setItem('username', response.username);
         this.router.navigate(['/board']);
       },
       (error) => {
-        // Handle login error
         console.error('Login error:', error);
         this.error = error.message || 'An error occurred during login.';
       }
     );
   }
-
 }

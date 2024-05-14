@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -8,13 +8,25 @@ import { catchError } from 'rxjs/operators';
 })
 export class ApiService {
   private apiUrl = 'http://localhost:5000/';
+  private authToken: string | null = null;
 
   constructor(private http: HttpClient) {}
 
+  setToken(token: string): void {
+    this.authToken = token;
+  }
+
+  getToken(): string | null {
+    return this.authToken;
+  }
+
+  clearToken(): void {
+    this.authToken = null;
+  }
+
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/login`, credentials).pipe(
-      catchError(error => {
-        // Handle login error
+      catchError((error) => {
         console.error('Login error:', error);
         return throwError(error);
       })
@@ -23,7 +35,7 @@ export class ApiService {
 
   register(userData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/register`, userData).pipe(
-      catchError(error => {
+      catchError((error) => {
         // Handle registration error
         console.error('Registration error:', error);
         return throwError(error);
@@ -33,7 +45,7 @@ export class ApiService {
 
   logout(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/logout`, {}).pipe(
-      catchError(error => {
+      catchError((error) => {
         // Handle logout error
         console.error('Logout error:', error);
         return throwError(error);
@@ -177,4 +189,23 @@ export class ApiService {
       })
     );
   }
+
+  getProtectedData(): Observable<any> {
+    const headers = this.getAuthHeaders(); // Use getAuthHeaders to include the authorization token
+    return this.http.get<any>(`${this.apiUrl}protectedData`, { headers }).pipe(
+      catchError(error => {
+        console.error('Get protected data error:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    if (this.authToken) {
+      headers = headers.set('Authorization', `Bearer ${this.authToken}`);
+    }
+    return headers;
+  }
 }
+

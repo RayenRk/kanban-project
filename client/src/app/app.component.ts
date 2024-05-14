@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { DragDropComponent } from './components/drag-drop/drag-drop.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -11,56 +11,67 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { ApiService } from './services/kanban-api.service';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
   providers: [ApiService],
-  imports: [RouterOutlet, DragDropComponent,CommonModule,
-    DashboardComponent,UsersComponent,TasksComponent,
-    ProjectsComponent,LoginComponent,RegisterComponent,HttpClientModule],
+  imports: [
+    RouterOutlet,
+    DragDropComponent,
+    DashboardComponent,
+    UsersComponent,
+    TasksComponent,
+    CommonModule,
+    ProjectsComponent,
+    LoginComponent,
+    RegisterComponent,
+    HttpClientModule
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit {
   title = 'Kanban Board';
-  isLoggedIn: boolean = false; // Initially set logged in to false
+  showNavbar: boolean = true;
+  isLoggedIn: boolean = false;
+  username: string = '';
 
-  constructor(private router: Router, private apiService: ApiService) {}
-
-  ngAfterViewInit() {
-    // Check for existing login on app load
-    this.checkLoginStatus();
-  }
-
-  checkLoginStatus() {
-    // Replace with your specific logic to check for a stored token
-    const storedToken = localStorage.getItem('userToken');
-    this.isLoggedIn = !!storedToken;  // Set isLoggedIn based on token presence
-  }
+  constructor(private router: Router, private apiService: ApiService) { }
 
   ngOnInit() {
+    this.checkLoginStatus();
+    
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.isLoggedIn = !['/login', '/register'].includes(event.url);
+        this.checkLoginStatus();
+      }
+      if (event instanceof NavigationEnd) {
+        this.isLoggedIn = !['/login', '/register','/home'].includes(event.url);
       }
     });
+  }
 
-    // Check for existing login on app load (optional)
-    this.checkLoginStatus();
+  checkLoginStatus(): void {
+    const token = this.apiService.getToken();
+    this.isLoggedIn = !!token;
+    if (this.isLoggedIn) {
+      this.username = localStorage.getItem('username') || '';
+    } else {
+      this.username = '';
+    }
   }
 
   logout() {
-    this.apiService.logout().subscribe(response => {
-      // Handle successful logout response (optional)
-      console.log('Logout successful:', response);
-      localStorage.removeItem('userToken'); // Example: remove stored token
-
-      // Redirect to login page after logout
-      this.router.navigate(['/login']);
-    }, error => {
-      // Handle logout error (optional)
-      console.error('Logout error:', error);
-    });
+    this.apiService.logout().subscribe(
+      () => {
+        this.apiService.clearToken();
+        this.isLoggedIn = false;
+        this.username = '';
+        this.router.navigate(['/login']);
+      },
+      (error: any) => {
+        console.error('Logout error:', error);
+      }
+    );
   }
 }

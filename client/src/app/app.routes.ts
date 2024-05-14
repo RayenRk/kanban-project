@@ -8,8 +8,8 @@ import { TasksComponent } from './components/tasks/tasks.component';
 import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, 
-  { path: 'dashboard', component: DashboardComponent },// Redirect root path to drag-drop
+  { path: '', redirectTo: '/home', pathMatch: 'full' }, 
+  { path: 'home', component: DashboardComponent },// Redirect root path to drag-drop
   { path: 'board', component: DragDropComponent }, // Drag & Drop route
   { path: 'login', component: LoginComponent }, // Login route
   { path: 'register', component: RegisterComponent }, // Register route
