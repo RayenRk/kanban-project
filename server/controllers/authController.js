@@ -48,10 +48,7 @@ const login = async (req, res) => {
                 // Create a JWT token
                 const token = jwt.sign({ username: user.username, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 
-                // Attach the token to the response header
-                res.setHeader('Authorization', token); // set the token in the response header
-
-                // Send the token in a variable in the response body
+                // Return the token and user information in the response
                 res.json({ token, username: user.username, role: user.role });
             }
         }
@@ -59,8 +56,6 @@ const login = async (req, res) => {
         res.status(500).json({ message: 'An error occurred' });
     }
 }
-
-
 // Logout a user
 const logout = (req, res) => {
     try {
