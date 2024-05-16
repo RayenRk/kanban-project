@@ -36,9 +36,7 @@ export class LoginComponent implements OnInit {
     this.apiService.login(credentials).subscribe(
       (response) => {
         console.log('Login successful:', response);
-        this.apiService.setToken(response.token); // Set the token after successful login
-        localStorage.setItem('username', response.username);
-        this.router.navigate(['/board']);
+        window.location.href = '/home';
       },
       (error) => {
         console.error('Login error:', error);

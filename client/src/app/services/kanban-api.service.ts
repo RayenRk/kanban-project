@@ -1,73 +1,77 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class ApiService {
   private apiUrl = 'http://localhost:5000/';
-  private authToken: string | null = null;
-  private username: string | null = null;
   private jwtHelper: JwtHelperService = new JwtHelperService();
-  loginStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private loggedInStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
+
+  loginStatus = this.loggedInStatus.asObservable();
 
   constructor(private http: HttpClient) {}
 
+  private isLocalStorageAvailable(): boolean {
+    try {
+      const test = '__test__';
+      localStorage.setItem(test, test);
+      localStorage.removeItem(test);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   isLoggedIn(): boolean {
-    if (typeof localStorage !== 'undefined') {
+    if (this.isLocalStorageAvailable()) {
       const token = localStorage.getItem('token');
       return !!token && !this.jwtHelper.isTokenExpired(token);
     }
-    return false; // Default to false if localStorage is not defined
+    return false;
   }
 
   getUsername(): string | null {
-    return this.username;
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('username');
+    }
+    return null;
   }
 
   setToken(token: string | null): void {
-    this.authToken = token;
-    if (token) {
-      localStorage.setItem('token', token);
-      this.username = this.jwtHelper.decodeToken(token)?.username || null;
-    } else {
-      localStorage.removeItem('token');
-      this.username = null;
+    if (this.isLocalStorageAvailable()) {
+      if (token) {
+        localStorage.setItem('token', token);
+        const decodedToken = this.jwtHelper.decodeToken(token);
+        localStorage.setItem('username', decodedToken?.username || '');
+      } else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+      }
+      this.loggedInStatus.next(this.isLoggedIn());
     }
-    // Emit login status change
-    this.loginStatus.next(this.isLoggedIn());
   }
 
   clearToken(): void {
-    this.authToken = null;
-    localStorage.removeItem('token');
-    this.username = null;
-    // Emit login status change
-    this.loginStatus.next(this.isLoggedIn());
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      this.loggedInStatus.next(this.isLoggedIn());
+    }
   }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = this.isLocalStorageAvailable() ? localStorage.getItem('token') : null;
     let headers = new HttpHeaders();
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
     return headers;
   }
-
-  login(credentials: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}api/auth/login`, credentials).pipe(
-      catchError((error) => {
-        console.error('Login error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
   register(userData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/register`, userData).pipe(
       catchError((error) => {
@@ -77,15 +81,30 @@ export class ApiService {
     );
   }
 
+  login(credentials: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}api/auth/login`, credentials).pipe(
+      tap(response => {
+        this.setToken(response.token);
+      }),
+      catchError((error) => {
+        console.error('Login error:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
   logout(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/logout`, {}).pipe(
+      tap(() => {
+        this.clearToken();
+      }),
       catchError((error) => {
         console.error('Logout error:', error);
         return throwError(error);
       })
     );
   }
-
+  
   getAllUsers(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}users`).pipe(
       catchError((error) => {

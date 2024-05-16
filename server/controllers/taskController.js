@@ -100,16 +100,12 @@ const addUserToTask = async (req, res) => {
 const newTask = async (req, res) => {
     try {
         const task = await Tasks.create(req.body);
-        const PROJECT = await project.findById(req.params)
-        const project = await Project.findByIdAndUpdate(
-            req.params.idproject,
-            { $push: { tasks: task.id } },
-            { new: true }
-        );
-        if (!project) {
+        const PROJECT = await Project.findById(req.params.idproject);
+
+        if (!PROJECT) {
             return res.status(404).send('Project not found');
         } else {
-            res.status(201).json({ project: project, task: task });
+            res.status(201).json({ project: PROJECT, task: task });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });

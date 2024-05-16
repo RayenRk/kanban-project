@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/kanban-api.service';
-import { FormBuilder, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
-
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-projects',
@@ -12,6 +11,7 @@ import { FormBuilder, FormGroup, Validators,ReactiveFormsModule } from '@angular
 })
 export class ProjectsComponent implements OnInit {
   projectForm: FormGroup;
+  showSuccessAlert: boolean = false;
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.projectForm = this.formBuilder.group({
@@ -28,6 +28,11 @@ export class ProjectsComponent implements OnInit {
         (data) => {
           console.log('Project added successfully:', data);
           this.projectForm.reset();
+          this.showSuccessAlert = true; // Show the success alert
+          setTimeout(() => {
+            this.showSuccessAlert = false; // Hide the success alert after 3 seconds
+            window.location.href = '/home'; // Redirect to home after hiding the alert
+          }, 1000);
         },
         (error) => {
           console.error('Error adding project:', error);
@@ -35,4 +40,5 @@ export class ProjectsComponent implements OnInit {
       );
     }
   }
+  
 }
