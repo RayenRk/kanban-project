@@ -1,19 +1,18 @@
-      <!-- Start Landing Page -->
-      <div class="landing-page">
-        <header>
-   
-        </header>
-        <div class="content">
-          <div class="container">
-            <div class="info">
-              <h1>Looking For Inspiration</h1>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus odit nihil ullam nesciunt quidem iste, Repellendus odit nihil</p>
-              <button>Button name</button>
-            </div>
-            <div class="image">
-              <img src="https://i.postimg.cc/65QxYYzh/001234.png">
-            </div>
-          </div>
-        </div>
+<section class="bg-gradient-to-br from-blue-500 to-purple-600 dark:bg-gray-900 flex flex-col justify-center items-center h-screen relative overflow-hidden">
+  <!-- Floating Elements for Extra Effect -->
+  <div class="absolute top-0 left-0 w-64 h-64 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob"></div>
+  <div class="absolute bottom-0 right-0 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-2000"></div>
+  <div class="absolute top-0 right-0 w-64 h-64 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
+
+  <!-- Project Cards -->
+  <div class="max-w-6xl grid grid-cols-3 gap-8 p-8">
+    <div *ngFor="let project of projects$ | async" class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105">
+      <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ project.name }}</h2>
+        <p class="text-gray-600 dark:text-gray-400">Description: {{ project.description }}</p>
       </div>
-      <!-- End Landing Page -->
+    </div>
+  </div>
+
+
+</section>

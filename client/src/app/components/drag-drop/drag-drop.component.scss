@@ -106,3 +106,27 @@
   .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }  
+
+  @keyframes blob {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    33% {
+      transform: translate(30px, -50px);
+    }
+    66% {
+      transform: translate(-20px, 40px);
+    }
+  }
+  .animate-blob {
+    animation: blob 8s infinite;
+  }
+  .animation-delay-1s {
+    animation-delay: 1s;
+  }
+  .animation-delay-2s {
+    animation-delay: 2s;
+  }
+  .animation-delay-3s {
+    animation-delay: 3s;
+  }
