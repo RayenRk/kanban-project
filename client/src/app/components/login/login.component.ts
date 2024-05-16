@@ -31,18 +31,18 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-
+  
     const credentials = this.loginForm.value;
     this.apiService.login(credentials).subscribe(
       (response) => {
         console.log('Login successful:', response);
-        this.apiService.setToken(response.token);
+        this.apiService.setToken(response.token); // Set the token after successful login
         localStorage.setItem('username', response.username);
         this.router.navigate(['/board']);
       },
       (error) => {
         console.error('Login error:', error);
-        this.error = error.message || 'An error occurred during login.';
+        this.error = error?.error?.message || 'An error occurred during login.';
       }
     );
   }

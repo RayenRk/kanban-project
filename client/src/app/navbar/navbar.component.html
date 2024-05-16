@@ -1,0 +1,45 @@
+<nav class="bg-gray-900 shadow-lg" *ngIf="showNavbar">
+    <div class="container mx-auto px-7 py-3 md:flex md:justify-between md:items-center">
+      <div class="flex justify-between items-center">
+        <a class="text-xl font-bold text-white" routerLink="/home">Kanban Management</a>
+        <div class="flex md:hidden">
+          <button type="button" class="text-gray-500 hover:text-white focus:outline-none focus:text-white">
+            <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
+              <path fill-rule="evenodd" d="M4 6h16a1 1 0 010 2H4a1 1 0 010-2zM4 11h16a1 1 0 010 2H4a1 1 0 010-2zM4 16h16a1 1 0 010 2H4a1 1 0 010-2z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:flex items-center">
+        <div class="flex flex-col md:flex-row md:mx-6">
+          <a routerLink="/board" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">Board</a>
+          <a routerLink="/new-task" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">New Task</a>
+          <a routerLink="/new-project" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">New Project</a>
+          <a routerLink="/new-user" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">New User</a>
+        </div>
+        <div class="flex flex-col md:flex-row md:mx-6">
+          <a *ngIf="!isLoggedIn" routerLink="/login" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">
+            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 18.364A9 9 0 1118.364 5.121 9 9 0 015.121 18.364z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2"></path>
+            </svg>
+            Login
+          </a>
+          <a *ngIf="!isLoggedIn" routerLink="/register" class="my-1 text-sm text-gray-300 hover:text-white md:mx-4 md:my-0">
+            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Register
+          </a>
+          <div *ngIf="isLoggedIn" class="flex items-center text-sm text-gray-300 md:mx-4">
+            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 18.364A9 9 0 1118.364 5.121 9 9 0 015.121 18.364z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2"></path>
+            </svg>
+            {{ username }}
+            <button class="ml-4 text-sm text-gray-300 hover:text-white" (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>

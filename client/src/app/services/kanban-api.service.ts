@@ -1,27 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class ApiService {
   private apiUrl = 'http://localhost:5000/';
   private authToken: string | null = null;
+  private username: string | null = null;
+  private jwtHelper: JwtHelperService = new JwtHelperService();
+  loginStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) {}
 
-  setToken(token: string): void {
-    this.authToken = token;
+  isLoggedIn(): boolean {
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem('token');
+      return !!token && !this.jwtHelper.isTokenExpired(token);
+    }
+    return false; // Default to false if localStorage is not defined
   }
 
-  getToken(): string | null {
-    return this.authToken;
+  getUsername(): string | null {
+    return this.username;
+  }
+
+  setToken(token: string | null): void {
+    this.authToken = token;
+    if (token) {
+      localStorage.setItem('token', token);
+      this.username = this.jwtHelper.decodeToken(token)?.username || null;
+    } else {
+      localStorage.removeItem('token');
+      this.username = null;
+    }
+    // Emit login status change
+    this.loginStatus.next(this.isLoggedIn());
   }
 
   clearToken(): void {
     this.authToken = null;
+    localStorage.removeItem('token');
+    this.username = null;
+    // Emit login status change
+    this.loginStatus.next(this.isLoggedIn());
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
   }
 
   login(credentials: any): Observable<any> {
@@ -36,7 +71,6 @@ export class ApiService {
   register(userData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/register`, userData).pipe(
       catchError((error) => {
-        // Handle registration error
         console.error('Registration error:', error);
         return throwError(error);
       })
@@ -46,31 +80,76 @@ export class ApiService {
   logout(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/logout`, {}).pipe(
       catchError((error) => {
-        // Handle logout error
         console.error('Logout error:', error);
         return throwError(error);
       })
     );
   }
 
+  getAllUsers(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}users`).pipe(
+      catchError((error) => {
+        console.error('Get all users error:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  getUserById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}users/${id}`).pipe(
+      catchError((error) => {
+        console.error('Get user by ID error:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  createUser(user: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}users`, user).pipe(
+      catchError((error) => {
+        console.error('Create user error:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  updateUser(id: string, user: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}users/${id}`, user).pipe(
+      catchError((error) => {
+        console.error('Update user error:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}users/${id}`).pipe(
+      catchError((error) => {
+        console.error('Delete user error:', error);
+        return throwError(error);
+      })
+    );
+  }
+
   getAllProjects(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}projectRouter/allprojects`).pipe(
+    const headers = this.getAuthHeaders();
+    return this.http.get<any>(`${this.apiUrl}projectRouter/allprojects`, { headers }).pipe(
       catchError(error => {
         console.error('Get all projects error:', error);
         return throwError(error);
       })
     );
   }
-
+  
   createProject(projectData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}projectRouter/newproject`, projectData).pipe(
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(`${this.apiUrl}projectRouter/newproject`, projectData, { headers }).pipe(
       catchError(error => {
         console.error('Create project error:', error);
         return throwError(error);
       })
     );
   }
-
   updateProject(id: string, projectData: any): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}projectRouter/updateproject/${id}`, projectData).pipe(
       catchError(error => {
@@ -143,69 +222,5 @@ export class ApiService {
     );
   }
 
-  // User Routes
-
-  getAllUsers(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}allusers`).pipe(
-      catchError(error => {
-        console.error('Get all users error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  getUserById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}user/${id}`).pipe(
-      catchError(error => {
-        console.error('Get user by ID error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  createUser(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}createuser`, userData).pipe(
-      catchError(error => {
-        console.error('Create user error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  updateUser(id: string, userData: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}updateuser/${id}`, userData).pipe(
-      catchError(error => {
-        console.error('Update user error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  deleteUser(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}deleteuser/${id}`).pipe(
-      catchError(error => {
-        console.error('Delete user error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  getProtectedData(): Observable<any> {
-    const headers = this.getAuthHeaders(); // Use getAuthHeaders to include the authorization token
-    return this.http.get<any>(`${this.apiUrl}protectedData`, { headers }).pipe(
-      catchError(error => {
-        console.error('Get protected data error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  private getAuthHeaders(): HttpHeaders {
-    let headers = new HttpHeaders();
-    if (this.authToken) {
-      headers = headers.set('Authorization', `Bearer ${this.authToken}`);
-    }
-    return headers;
-  }
+  
 }
-

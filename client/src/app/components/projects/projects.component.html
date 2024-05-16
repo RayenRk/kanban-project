@@ -2,28 +2,18 @@
     <!-- Project Form -->
     <div class="max-w-3xl p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden transition duration-300 ease-in-out transform hover:scale-105">
         <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white text-center">Add New Project</h2>
-        <form action="#" method="POST" class="px-9 py-3">
+        <form [formGroup]="projectForm" (ngSubmit)="addProject()">
             <div class="grid gap-6 mb-6">
                 <div class="flex items-center space-x-4">
-                    <input type="text" name="project_name" id="project_name" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none" placeholder="Project Name" required>
+                    <input type="text" formControlName="project_name" name="project_name" id="project_name" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none" placeholder="Project Name" required>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <textarea name="description" id="description" rows="5" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none resize-none" placeholder="Description" required></textarea>
+                    <textarea formControlName="description" name="description" id="description" rows="5" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none resize-none" placeholder="Description" required></textarea>
                 </div>
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="flex items-center space-x-4">
-                        <input type="date" name="date_start" id="date_start" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none" placeholder="Start Date" required>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <input type="date" name="date_end" id="date_end" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none" placeholder="End Date" required>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <input type="text" name="owner" id="owner" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none" placeholder="Owner" required>
-                </div>
+            
             </div>
             <div class="flex justify-end space-x-4">
-                <button type="button" class="text-green-600 inline-flex items-center border border-green-600 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-4 py-2 text-center transition duration-300 ease-in-out bg-green-100 hover:text-white dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-900">
+                <button type="submit" class="text-green-600 inline-flex items-center border border-green-600 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-4 py-2 text-center transition duration-300 ease-in-out bg-green-100 hover:text-white dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-900">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 6a1 1 0 012 0v3h3a1 1 0 010 2h-3v3a1 1 0 01-2 0v-3H6a1 1 0 010-2h3V6z" clip-rule="evenodd"></path>
                     </svg>
