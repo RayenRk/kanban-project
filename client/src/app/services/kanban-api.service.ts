@@ -124,7 +124,8 @@ export class ApiService {
   }
 
   createUser(user: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}users`, user).pipe(
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(`${this.apiUrl}api/user/createUser`, user, { headers }).pipe(
       catchError((error) => {
         console.error('Create user error:', error);
         return throwError(error);
