@@ -42,6 +42,22 @@ export class ApiService {
     return null;
   }
 
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }  
+
+  // New method to get the user ID from localStorage
+  getUserIdFromLocalStorage(): string | null {
+    if (this.isBrowser() && this.isLocalStorageAvailable()) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = this.jwtHelper.decodeToken(token);
+        return decodedToken?.userId || null;
+      }
+    }
+    return null;
+  }
+
   setToken(token: string | null): void {
     if (this.isLocalStorageAvailable()) {
       if (token) {

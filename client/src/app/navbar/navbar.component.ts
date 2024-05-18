@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit {
   showNavbar: boolean = true;
   isLoggedIn: boolean = false;
   username: string | null = null;
+  userId: string | null = null;
   mobileMenuOpen: boolean = false;
 
   constructor(private router: Router, private apiService: ApiService) {}
@@ -31,12 +32,14 @@ export class NavbarComponent implements OnInit {
     // Check login status initially
     this.isLoggedIn = this.apiService.isLoggedIn();
     this.username = this.apiService.getUsername();
+    this.userId = this.apiService.getUserIdFromLocalStorage();
   
     // Subscribe to changes in login status
     this.apiService.loginStatus.subscribe((loggedIn) => {
       console.log('Login status changed:', loggedIn);
       this.isLoggedIn = loggedIn;
       this.username = this.apiService.getUsername();
+      this.userId = this.apiService.getUserIdFromLocalStorage();
     });
   }
   toggleMobileMenu(): void {
