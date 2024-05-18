@@ -207,7 +207,7 @@ export class ApiService {
   }
 
   getAllTasks(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}alltasks`).pipe(
+    return this.http.get<any>(`${this.apiUrl}taskRouter/alltasks`).pipe(
       catchError(error => {
         console.error('Get all tasks error:', error);
         return throwError(error);

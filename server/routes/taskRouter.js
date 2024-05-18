@@ -4,7 +4,7 @@ const authenticate = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.get('/alltasks', authenticate.authenticate, authenticate.authorize,taskController.getAllTasks);
+router.get('/alltasks',taskController.getAllTasks);
 router.get('/getsingletask/:idtask', taskController.getTaskById,authenticate.authenticate, authenticate.authorize,);
 router.post('/newTask/:idproject', authenticate.authenticate, authenticate.authorize,taskController.newTask);
 router.patch('/updatetask/:idtask',authenticate.authenticate, authenticate.authorize, taskController.updateTask); // authenticate.authenticate, authenticate.authorize,
