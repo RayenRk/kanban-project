@@ -16,7 +16,6 @@ export class NavbarComponent implements OnInit {
   showNavbar: boolean = true;
   isLoggedIn: boolean = false;
   username: string | null = null;
-  mobileMenuOpen: boolean = false;
 
   constructor(private router: Router, private apiService: ApiService) {}
 
@@ -39,9 +38,7 @@ export class NavbarComponent implements OnInit {
       this.username = this.apiService.getUsername();
     });
   }
-  toggleMobileMenu(): void {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
-  }
+  
   
   logout() {
     this.apiService.logout().subscribe(
