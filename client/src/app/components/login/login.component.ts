@@ -13,10 +13,10 @@ import { ApiService } from '../../services/kanban-api.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   error: string | null = null;
-  isAuthenticated: boolean = false;
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private apiService: ApiService
   ) { }
 
@@ -36,13 +36,11 @@ export class LoginComponent implements OnInit {
     this.apiService.login(credentials).subscribe(
       (response) => {
         console.log('Login successful:', response);
-        this.isAuthenticated = true;
         window.location.href = '/home';
       },
       (error) => {
         console.error('Login error:', error);
         this.error = error?.error?.message || 'An error occurred during login.';
-        this.isAuthenticated = false;
       }
     );
   }

@@ -34,7 +34,7 @@ export class ApiService {
     }
     return false;
   }
-  
+
   getUsername(): string | null {
     if (this.isLocalStorageAvailable()) {
       return localStorage.getItem('username');
@@ -72,7 +72,6 @@ export class ApiService {
     }
     return headers;
   }
-
   register(userData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/register`, userData).pipe(
       catchError((error) => {
@@ -86,7 +85,6 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}api/auth/login`, credentials).pipe(
       tap(response => {
         this.setToken(response.token);
-        this.loggedInStatus.next(true); 
       }),
       catchError((error) => {
         console.error('Login error:', error);
@@ -94,7 +92,6 @@ export class ApiService {
       })
     );
   }
-  
   
   logout(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/logout`, {}).pipe(
@@ -109,14 +106,12 @@ export class ApiService {
   }
   
   getAllUsers(): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.get<any>(`${this.apiUrl}user/users`, { headers })
-      .pipe(
-        catchError(error => {
-          console.error('Get all users error:', error);
-          return throwError(error);
-        })
-      );
+    return this.http.get<any>(`${this.apiUrl}users`).pipe(
+      catchError((error) => {
+        console.error('Get all users error:', error);
+        return throwError(error);
+      })
+    );
   }
 
   getUserById(id: string): Observable<any> {
@@ -147,9 +142,8 @@ export class ApiService {
     );
   }
 
-  deleteUser(userId: number): Observable<any> {
-    const userIdString = userId.toString(); // Convert userId to string
-    return this.http.delete<any>(`${this.apiUrl}users/${userIdString}`).pipe(
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}users/${id}`).pipe(
       catchError((error) => {
         console.error('Delete user error:', error);
         return throwError(error);
@@ -159,15 +153,14 @@ export class ApiService {
 
   getAllProjects(): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.get<any>(`${this.apiUrl}projectRouter/allprojects`, { headers })
-      .pipe(
-        catchError(error => {
-          console.error('Get all projects error:', error);
-          return throwError(error);
-        })
-      );
+    return this.http.get<any>(`${this.apiUrl}projectRouter/allprojects`, { headers }).pipe(
+      catchError(error => {
+        console.error('Get all projects error:', error);
+        return throwError(error);
+      })
+    );
   }
-
+  
   createProject(projectData: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post<any>(`${this.apiUrl}projectRouter/newproject`, projectData, { headers }).pipe(
@@ -186,11 +179,9 @@ export class ApiService {
     );
   }
 
- 
-  deleteProject(projectId: number): Observable<any> {
-    const projectIdString = projectId.toString(); // Convert projectId to string
-    return this.http.delete<any>(`${this.apiUrl}projectRouter/deleteproject/${projectIdString}`).pipe(
-      catchError((error) => {
+  deleteProject(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}projectRouter/deleteproject/${id}`).pipe(
+      catchError(error => {
         console.error('Delete project error:', error);
         return throwError(error);
       })
