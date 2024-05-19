@@ -60,6 +60,8 @@ export class DragDropComponent implements OnInit {
 
   // Implement the drop method
   drop(event: CdkDragDrop<any[]>) {
+
+    // Check if user is authenticated before fetching projects
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,

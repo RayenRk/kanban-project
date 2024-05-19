@@ -266,7 +266,7 @@ export class ApiService {
   }
 
   newTask(projectId: string, taskData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}newTask/${projectId}`, taskData).pipe(
+    return this.http.post<any>(`${this.apiUrl}taskRouter/newTask/${projectId}`, taskData).pipe(
       catchError(error => {
         console.error('Create new task error:', error);
         return throwError(error);
@@ -275,7 +275,7 @@ export class ApiService {
   }
 
   updateTask(id: string, taskData: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}updatetask/${id}`, taskData).pipe(
+    return this.http.patch<any>(`${this.apiUrl}taskRouter/updateTask/${id}`, taskData).pipe(
       catchError(error => {
         console.error('Update task error:', error);
         return throwError(error);
