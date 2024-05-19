@@ -10,14 +10,20 @@ import { ApiService } from '../../services/kanban-api.service';
 import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { userInfo } from 'node:os';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-drag-drop',
   standalone: true,
-  imports: [DragDropModule, HttpClientModule, AsyncPipe,ReactiveFormsModule,CommonModule],
+  imports: [DragDropModule, HttpClientModule, AsyncPipe,ReactiveFormsModule,CommonModule,MatFormFieldModule
+    ,MatInputModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule
+  ],
   templateUrl: './drag-drop.component.html',
   styleUrls: ['./drag-drop.component.scss'],
 })
@@ -104,4 +110,6 @@ export class DragDropComponent implements OnInit {
       );
     }
   }
+
+  // implement addTask method
 }
