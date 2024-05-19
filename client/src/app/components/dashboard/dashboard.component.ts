@@ -21,13 +21,7 @@ export class DashboardComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // Check if user is authenticated before fetching projects
-    if (this.apiService.isLoggedIn()) {
-      this.fetchProjects();
-    } else {
-      // Handle unauthenticated user
-      console.error('User is not authenticated.');
-    }
+    this.fetchProjects();
   }
 
   fetchProjects(): void {

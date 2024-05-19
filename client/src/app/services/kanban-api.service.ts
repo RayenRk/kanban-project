@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Task } from '../models/tasks';
+import { EMPTY } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -33,11 +35,26 @@ export class ApiService {
       return !!token && !this.jwtHelper.isTokenExpired(token);
     }
     return false;
-  }
+  }    
   
   getUsername(): string | null {
     if (this.isLocalStorageAvailable()) {
       return localStorage.getItem('username');
+    }
+    return null;
+  }
+
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }  
+
+  getUserIdFromLocalStorage(): string | null {
+    if (this.isBrowser() && this.isLocalStorageAvailable()) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = this.jwtHelper.decodeToken(token);
+        return decodedToken?.userId || null;
+      }
     }
     return null;
   }
@@ -47,30 +64,37 @@ export class ApiService {
       if (token) {
         localStorage.setItem('token', token);
         const decodedToken = this.jwtHelper.decodeToken(token);
+        localStorage.setItem('userId', decodedToken?.userId || '');
         localStorage.setItem('username', decodedToken?.username || '');
       } else {
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
         localStorage.removeItem('username');
       }
       this.loggedInStatus.next(this.isLoggedIn());
     }
   }
-
-  clearToken(): void {
-    if (this.isLocalStorageAvailable()) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
-      this.loggedInStatus.next(this.isLoggedIn());
-    }
-  }
-
+  
+  
   private getAuthHeaders(): HttpHeaders {
     const token = this.isLocalStorageAvailable() ? localStorage.getItem('token') : null;
+    console.log('Token:', token); // Debugging line
     let headers = new HttpHeaders();
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
     return headers;
+  }
+  
+  
+
+  clearToken(): void {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      this.loggedInStatus.next(this.isLoggedIn());
+    }
   }
 
   register(userData: any): Observable<any> {
@@ -93,8 +117,7 @@ export class ApiService {
         return throwError(error);
       })
     );
-  }
-  
+  }  
   
   logout(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/logout`, {}).pipe(
@@ -166,6 +189,35 @@ export class ApiService {
           return throwError(error);
         })
       );
+  }  
+
+  getAllTasksCurrent(): Observable<Task[]> {
+    const userId = this.getUserIdFromLocalStorage();
+    if (!userId) {
+      return EMPTY; // Return an empty observable instead of throwing an error
+    }
+  
+    const headers = this.getAuthHeaders();
+    return this.http.get<Task[]>(`${this.apiUrl}taskRouter/alltasksbyuser/${userId}`, {
+      headers,
+    }).pipe(
+      catchError(error => {
+        console.error('Error fetching tasks:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
+
+  getAllTasks(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any>(`${this.apiUrl}taskRouter/alltasks`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Get all projects error:', error);
+          return throwError(error);
+        })
+      );
   }
 
   createProject(projectData: any): Observable<any> {
@@ -177,6 +229,7 @@ export class ApiService {
       })
     );
   }
+
   updateProject(id: string, projectData: any): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}projectRouter/updateproject/${id}`, projectData).pipe(
       catchError(error => {
@@ -186,7 +239,6 @@ export class ApiService {
     );
   }
 
- 
   deleteProject(projectId: number): Observable<any> {
     const projectIdString = projectId.toString(); // Convert projectId to string
     return this.http.delete<any>(`${this.apiUrl}projectRouter/deleteproject/${projectIdString}`).pipe(
@@ -201,15 +253,6 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}FTOEP/${id}`).pipe(
       catchError(error => {
         console.error('Find tasks of each project error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  getAllTasks(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}alltasks`).pipe(
-      catchError(error => {
-        console.error('Get all tasks error:', error);
         return throwError(error);
       })
     );
@@ -235,7 +278,7 @@ export class ApiService {
 
   updateTask(id: string, taskData: any): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}updatetask/${id}`, taskData).pipe(
-      catchError(error => {
+      catchError((error) => {
         console.error('Update task error:', error);
         return throwError(error);
       })
@@ -250,6 +293,4 @@ export class ApiService {
       })
     );
   }
-
-  
 }

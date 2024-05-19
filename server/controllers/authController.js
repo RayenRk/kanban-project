@@ -46,10 +46,10 @@ const login = async (req, res) => {
                 return res.status(400).json({ message: 'Invalid username or password' });
             } else {
                 // Create a JWT token
-                const token = jwt.sign({ username: user.username, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
+                const token = jwt.sign({ username: user.username, userId: user._id, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 
                 // Return the token and user information in the response
-                res.json({ token, username: user.username, role: user.role });
+                res.json({ token, username: user.username, userId: user._id, role: user.role });
             }
         }
     } catch (error) {

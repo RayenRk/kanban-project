@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ApiService } from '../services/kanban-api.service';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
@@ -12,11 +13,13 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   showNavbar: boolean = true;
   isLoggedIn: boolean = false;
   username: string | null = null;
+  userId: string | null = null;
   mobileMenuOpen: boolean = false;
+  private loginStatusSub!: Subscription;
 
   constructor(private router: Router, private apiService: ApiService) {}
 
@@ -27,18 +30,15 @@ export class NavbarComponent implements OnInit {
         this.showNavbar = !['/login', '/register'].includes(event.urlAfterRedirects);
       }
     });
-  
-    // Check login status initially
-    this.isLoggedIn = this.apiService.isLoggedIn();
-    this.username = this.apiService.getUsername();
-  
-    // Subscribe to changes in login status
-    this.apiService.loginStatus.subscribe((loggedIn) => {
-      console.log('Login status changed:', loggedIn);
+
+    this.loginStatusSub = this.apiService.loginStatus.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       this.username = this.apiService.getUsername();
+      this.userId = this.apiService.getUserIdFromLocalStorage();
+      console.log('Login status changed:', loggedIn);
     });
   }
+
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
@@ -47,11 +47,17 @@ export class NavbarComponent implements OnInit {
     this.apiService.logout().subscribe(
       () => {
         console.log('Logout successful');
-        this.router.navigate(['/login']);
+        window.location.href = '/login';
       },
       (error) => {
         console.error('Logout error:', error);
       }
     );
+  }
+
+  ngOnDestroy() {
+    if (this.loginStatusSub) {
+      this.loginStatusSub.unsubscribe();
+    }
   }
 }
