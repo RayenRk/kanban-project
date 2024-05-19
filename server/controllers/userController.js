@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
+const Tasks = require("../models/taskModel");
 
 
 // CRUD logic for users
@@ -60,4 +61,4 @@ const deleteUser = async (req, res) => {
       }
 }
 
-module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser };
+module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser, };

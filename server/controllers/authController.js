@@ -34,7 +34,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { username, password } = req.body;
-
         // Check if the user exists
         const user = await User.findOne ({ username });
         if (!user) {
@@ -46,7 +45,8 @@ const login = async (req, res) => {
                 return res.status(400).json({ message: 'Invalid username or password' });
             } else {
                 // Create a JWT token
-                const token = jwt.sign({ username: user.username, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
+                const token = jwt.sign({ username: user.username, role: user.role, id:user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+
                 // Attach the token to the response header
                  res.json({ token });
                // res.setHeader('Authorization', token); fixed login error
