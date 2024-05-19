@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Task } from '../models/tasks';
 
 @Injectable({
   providedIn: 'root',
@@ -63,9 +64,11 @@ export class ApiService {
       if (token) {
         localStorage.setItem('token', token);
         const decodedToken = this.jwtHelper.decodeToken(token);
+        localStorage.setItem('userId', decodedToken?.userId || '');
         localStorage.setItem('username', decodedToken?.username || '');
       } else {
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
         localStorage.removeItem('username');
       }
       this.loggedInStatus.next(this.isLoggedIn());
@@ -74,6 +77,7 @@ export class ApiService {
 
   clearToken(): void {
     if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem('userId');
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       this.loggedInStatus.next(this.isLoggedIn());
@@ -184,6 +188,34 @@ export class ApiService {
       );
   }
 
+  getAllTasksCurrent(): Observable<any[]> {
+    const userId = this.getUserIdFromLocalStorage();
+    if (!userId) {
+      return throwError('User ID not found in local storage');
+    }
+
+    return this.http.get<any[]>(`${this.apiUrl}taskRouter/alltasksbyuser/${userId}`, {
+      headers: this.getAuthHeaders(),
+    }).pipe(
+      //map(tasks => tasks.filter(task => task.responsible === userId)),
+      catchError(error => {
+        console.error('Error fetching tasks:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  getAllTasks(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any>(`${this.apiUrl}taskRouter/alltasks`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Get all projects error:', error);
+          return throwError(error);
+        })
+      );
+  }
+
   createProject(projectData: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post<any>(`${this.apiUrl}projectRouter/newproject`, projectData, { headers }).pipe(
@@ -222,14 +254,7 @@ export class ApiService {
     );
   }
 
-  getAllTasks(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}taskRouter/alltasks`).pipe(
-      catchError(error => {
-        console.error('Get all tasks error:', error);
-        return throwError(error);
-      })
-    );
-  }
+  
 
   getTaskById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}getsingletask/${id}`).pipe(

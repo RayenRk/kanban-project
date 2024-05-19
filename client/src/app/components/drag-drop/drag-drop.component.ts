@@ -7,37 +7,56 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Task } from '../../models/tasks';
 import { ApiService } from '../../services/kanban-api.service';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-drag-drop',
   standalone: true,
-  imports: [DragDropModule],
+  imports: [DragDropModule, HttpClientModule, AsyncPipe,ReactiveFormsModule,CommonModule],
   templateUrl: './drag-drop.component.html',
   styleUrls: ['./drag-drop.component.scss'],
 })
 export class DragDropComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
+  tasks$!: Observable<any[]>;
   tasks: Task[] = [];
   todo: Task[] = [];
   progress: Task[] = [];
   done: Task[] = [];
 
-  isLoggedIn: boolean = false;
-  userId: string | null = null;
 
   ngOnInit(): void {
-
-    this.apiService.getAllTasks().subscribe((data: Task[]) => {
-    //this.apiService.findTasksOfEachUser(this.apiService.getUserId()).subscribe((data: Task[]) => {
+    // Check if user is authenticated before fetching projects
+    if (this.apiService.isLoggedIn()) {
+    this.apiService.getAllTasksCurrent().subscribe((data: Task[]) => {
+      //this.apiService.findTasksOfEachUser(this.apiService.getUserId()).subscribe((data: Task[]) => {
+        
+        this.tasks = data;
+        this.todo = this.tasks.filter((task) => task.status === 'todo');
+        this.progress = this.tasks.filter((task) => task.status === 'inprogress');
+        this.done = this.tasks.filter((task) => task.status === 'done');
+      });
       
-      this.tasks = data;
-      this.todo = this.tasks.filter((task) => task.status === 'todo');
-      this.progress = this.tasks.filter((task) => task.status === 'inprogress');
-      this.done = this.tasks.filter((task) => task.status === 'done');
-    });
+      
+    } else {
+      // Handle unauthenticated user
+      console.error('User is not authenticated.');
+    }
+
+
   }
+
+  fetchTasks(): void {
+    this.tasks$ = this.apiService.getAllTasksCurrent();
+  }
+
+    
+    
 
   // Implement the drop method
   drop(event: CdkDragDrop<any[]>) {

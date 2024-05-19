@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit {
     // Check if user is authenticated before fetching projects
     if (this.apiService.isLoggedIn()) {
       this.fetchProjects();
+      this.apiService.getUserIdFromLocalStorage();
     } else {
       // Handle unauthenticated user
       console.error('User is not authenticated.');
