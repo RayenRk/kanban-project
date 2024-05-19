@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { userInfo } from 'node:os';
 
 @Component({
   selector: 'app-drag-drop',
@@ -28,9 +29,11 @@ export class DragDropComponent implements OnInit {
   todo: Task[] = [];
   progress: Task[] = [];
   done: Task[] = [];
+  username: string | null = null;
 
 
   ngOnInit(): void {
+    this.username =this.apiService.getUsername();
     // Check if user is authenticated before fetching projects
     if (this.apiService.isLoggedIn()) {
     this.apiService.getAllTasksCurrent().subscribe((data: Task[]) => {
