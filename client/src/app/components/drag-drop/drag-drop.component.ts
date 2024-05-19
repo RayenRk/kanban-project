@@ -17,6 +17,14 @@ import { MatInputModule } from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
+import {
+  MatDialog,
+  MatDialogRef,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogTitle,
+  MatDialogContent,
+} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-drag-drop',
@@ -28,7 +36,7 @@ import {MatButtonModule} from '@angular/material/button';
   styleUrls: ['./drag-drop.component.scss'],
 })
 export class DragDropComponent implements OnInit {
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService,public dialog: MatDialog) {}
 
   tasks$!: Observable<any[]>;
   tasks: Task[] = [];
@@ -58,6 +66,14 @@ export class DragDropComponent implements OnInit {
     }
 
 
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(DialogAnimationsExampleDialog, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    })
   }
 
   fetchTasks(): void {
@@ -112,4 +128,15 @@ export class DragDropComponent implements OnInit {
   }
 
   // implement addTask method
+}
+
+@Component({
+  selector: 'dialog-animations-example-dialog',
+  templateUrl: 'dialog-animations-example-dialog.html',
+  standalone: true,
+  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent
+    ,MatInputModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule]
+})
+export class DialogAnimationsExampleDialog {
+  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>) {}
 }
