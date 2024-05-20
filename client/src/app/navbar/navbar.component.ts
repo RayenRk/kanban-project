@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ApiService } from '../services/kanban-api.service';
-import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
@@ -13,17 +12,21 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit {
   showNavbar: boolean = true;
   isLoggedIn: boolean = false;
   username: string | null = null;
   userId: string | null = null;
   mobileMenuOpen: boolean = false;
-  private loginStatusSub!: Subscription;
-  isAdmin: boolean = false;
-  isProjectOwner: boolean = false;
+  currentUrl: string | undefined;
 
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(private router: Router, private apiService: ApiService) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl = event.url;
+      }
+    });
+  }
 
   ngOnInit() {
     console.log('Navbar initialized');
@@ -32,23 +35,20 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.showNavbar = !['/login', '/register'].includes(event.urlAfterRedirects);
       }
     });
-
-    this.loginStatusSub = this.apiService.loginStatus.subscribe(loggedIn => {
+  
+    // Check login status initially
+    this.isLoggedIn = this.apiService.isLoggedIn();
+    this.username = this.apiService.getUsername();
+    this.userId = this.apiService.getUserIdFromLocalStorage();
+  
+    // Subscribe to changes in login status
+    this.apiService.loginStatus.subscribe((loggedIn) => {
+      console.log('Login status changed:', loggedIn);
       this.isLoggedIn = loggedIn;
       this.username = this.apiService.getUsername();
       this.userId = this.apiService.getUserIdFromLocalStorage();
-      console.log('Login status changed:', loggedIn);
-
-      if (loggedIn && !this.isAdmin && !this.isProjectOwner) {
-        // Fetch user role only if not already fetched
-        this.apiService.getUserRole().subscribe(role => {
-          this.isAdmin = role === 'admin';
-          this.isProjectOwner = role === 'po';
-        });
-      }
     });
   }
-
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
@@ -57,17 +57,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.apiService.logout().subscribe(
       () => {
         console.log('Logout successful');
-        window.location.href = '/login';
+        this.router.navigate(['/login']);
       },
       (error) => {
         console.error('Logout error:', error);
       }
     );
-  }
-
-  ngOnDestroy() {
-    if (this.loginStatusSub) {
-      this.loginStatusSub.unsubscribe();
-    }
   }
 }
