@@ -20,6 +20,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   userId: string | null = null;
   mobileMenuOpen: boolean = false;
   private loginStatusSub!: Subscription;
+  isAdmin: boolean = false;
+  isProjectOwner: boolean = false;
 
   constructor(private router: Router, private apiService: ApiService) {}
 
@@ -36,6 +38,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.username = this.apiService.getUsername();
       this.userId = this.apiService.getUserIdFromLocalStorage();
       console.log('Login status changed:', loggedIn);
+
+      if (loggedIn && !this.isAdmin && !this.isProjectOwner) {
+        // Fetch user role only if not already fetched
+        this.apiService.getUserRole().subscribe(role => {
+          this.isAdmin = role === 'admin';
+          this.isProjectOwner = role === 'po';
+        });
+      }
     });
   }
 

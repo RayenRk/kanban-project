@@ -7,16 +7,17 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Task } from '../../models/tasks';
 import { ApiService } from '../../services/kanban-api.service';
-import { HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+import { Observable, take } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Project } from '../../models/projects';
 
 @Component({
   selector: 'app-drag-drop',
   standalone: true,
-  imports: [DragDropModule, HttpClientModule, AsyncPipe, ReactiveFormsModule, CommonModule],
+  imports: [DragDropModule, HttpClientModule, AsyncPipe,ReactiveFormsModule,CommonModule],
   templateUrl: './drag-drop.component.html',
   styleUrls: ['./drag-drop.component.scss'],
 })
@@ -26,44 +27,52 @@ export class DragDropComponent implements OnInit {
   todo: Task[] = [];
   progress: Task[] = [];
   done: Task[] = [];
+  username: string | null = null;
+  projects: Project[] = [];
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.fetchTasks();
-  }
+    this.username = this.apiService.getUsername();
 
-  fetchTasks(): void {
-    this.apiService.getAllTasksCurrent().subscribe(
-      (data: Task[]) => {
+    if (this.apiService.isLoggedIn()) {
+      this.apiService.getCurrentProject().subscribe(
+        (project) => {
+          this.projects = project.name;
+        },
+        (error) => {
+          console.error('Error fetching project name:', error);
+        }
+      );
+
+      this.apiService.getAllTasksCurrent().subscribe((data: Task[]) => {
         this.tasks = data;
         this.todo = this.tasks.filter((task) => task.status === 'todo');
         this.progress = this.tasks.filter((task) => task.status === 'inprogress');
         this.done = this.tasks.filter((task) => task.status === 'done');
-      },
-      (error) => {
-        console.error('Error fetching tasks:', error);
-      }
-    );
+      });
+    } else {
+      console.error('User is not authenticated.');
+    }
   }
 
-  drop(event: CdkDragDrop<any[]>) {
+  fetchTasks(): void {
+    this.tasks$ = this.apiService.getAllTasksCurrent();
+  }
+
+  getProjectName(projects: Project[], projectId: string): string {
+    const project = projects.find(project => project._id === projectId);
+    return project ? project.name : 'Unknown'; 
+  }
+  
+
+  drop(event: CdkDragDrop<any[]>): void {
     if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const task = event.previousContainer.data[event.previousIndex];
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
 
-      // Determine the new status based on the target container
       let newStatus!: string;
       if (event.container.id === 'todoList') {
         newStatus = 'todo';
@@ -73,27 +82,21 @@ export class DragDropComponent implements OnInit {
         newStatus = 'done';
       }
 
-      // Update the task status
       task.status = newStatus;
 
-      // Call the service method to update the task status in the database
       this.apiService.updateTask(task._id, { status: newStatus }).subscribe(
         (updatedTask: Task) => {
           console.log('Task status updated successfully', updatedTask);
         },
         (error) => {
           console.error('Error updating task status', error);
-          // Revert the change in case of an error
-          transferArrayItem(
-            event.container.data,
-            event.previousContainer.data,
-            event.currentIndex,
-            event.previousIndex
-          );
-          task.status = event.previousContainer.id === 'todoList' ? 'todo' : 
-                        event.previousContainer.id === 'progressList' ? 'inprogress' : 'done';
         }
       );
     }
+  }
+
+  // Add the trackById method
+  trackById(index: number, item: Task): string {
+    return item._id || 'no-id'; // Assuming each task has a unique _id property
   }
 }

@@ -1,41 +1,47 @@
 <section class="bg-gradient-to-r from-indigo-500 to-teal-500 dark:bg-gray-900 flex flex-col justify-center items-center min-h-screen relative overflow-hidden">
   <!-- Floating Elements for Extra Effect -->
-  <div class="absolute top-0 left-0 w-64 h-64 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-  <div class="absolute bottom-0 right-0 w-64 h-64 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-  <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+  <div class="absolute top-0 left-0 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+  <div class="absolute bottom-0 right-0 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+  <div class="absolute top-0 right-0 w-40 h-40 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
 
   <!-- Kanban Board Title -->
-  <div class="container flex justify-center text-center pt-8 text-5xl font-extrabold text-white animate__animated animate__fadeInDown">
+  <div class="container flex justify-center text-center pt-8 text-4xl font-extrabold text-white animate__animated animate__fadeInDown">
     <h1>Kanban Board</h1>
   </div>
 
   <!-- Kanban Board -->
-  <div class="container flex flex-row justify-around items-start p-12 space-x-8 animate__animated animate__fadeInUp animate__delay-1s">
-    <div cdkDropListGroup class="w-full max-w-6xl flex flex-row justify-around space-x-8">
-      
-      <!-- To Do Section -->
-      <div class="example-container bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition duration-300 ease-in-out transform hover:scale-105">
-        <h2 class="text-3xl text-pink-500 mb-4 text-center">To Do</h2>
-        <div cdkDropList id="todoList" [cdkDropListData]="todo" (cdkDropListDropped)="drop($event)" class="example-list p-4 rounded-lg shadow-inner">
-          <div *ngFor="let item of todo" class="example-box bg-gray-100 dark:bg-gray-700 p-4 my-2 rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105" cdkDrag>{{item.name}}</div>
-        </div>
-      </div>
-      
-      <!-- In Progress Section -->
-      <div class="example-container bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition duration-300 ease-in-out transform hover:scale-105">
-        <h2 class="text-3xl text-blue-500 mb-4 text-center">In Progress</h2>
-        <div cdkDropList id="progressList" [cdkDropListData]="progress" (cdkDropListDropped)="drop($event)" class="example-list p-4 rounded-lg shadow-inner">
-          <div *ngFor="let item of progress" class="example-box bg-gray-100 dark:bg-gray-700 p-4 my-2 rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105" cdkDrag>{{item.name}}</div>
-        </div>
-      </div>
+  <div class="container flex flex-row justify-around items-start p-6 space-x-4 animate__animated animate__fadeInUp animate__delay-1s">
+    <div cdkDropListGroup class="w-full max-w-3xl flex flex-row justify-around space-x-4">
+ <!-- To Do Section -->
+<div class="example-container bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition duration-300 ease-in-out transform hover:scale-105">
+  <h2 class="text-3xl text-pink-500 mb-4 text-center">To Do</h2>
+  <div cdkDropList id="todoList" [cdkDropListData]="todo" (cdkDropListDropped)="drop($event)" class="example-list p-4 rounded-lg shadow-inner">
+    <div *ngFor="let item of todo" class="example-box p-4 my-2 rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
+    [ngStyle]="{ 'background-color': item.status === 'todo' ? 'lightblue' : (item.status === 'inprogress' ? 'lightyellow' : 'lightgreen') }"
+    cdkDrag>{{item.name}}</div>
+  </div>
+</div>
 
-      <!-- Done Section -->
-      <div class="example-container bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition duration-300 ease-in-out transform hover:scale-105">
-        <h2 class="text-3xl text-green-500 mb-4 text-center">Done</h2>
-        <div cdkDropList id="doneList" [cdkDropListData]="done" (cdkDropListDropped)="drop($event)" class="example-list p-4 rounded-lg shadow-inner">
-          <div *ngFor="let item of done" class="example-box bg-gray-100 dark:bg-gray-700 p-4 my-2 rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105" cdkDrag>{{item.name}}</div>
-        </div>
-      </div>
+<!-- In Progress Section -->
+<div class="example-container bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition duration-300 ease-in-out transform hover:scale-105">
+  <h2 class="text-3xl text-blue-500 mb-4 text-center">In Progress</h2>
+  <div cdkDropList id="progressList" [cdkDropListData]="progress" (cdkDropListDropped)="drop($event)" class="example-list p-4 rounded-lg shadow-inner">
+    <div *ngFor="let item of progress" class="example-box p-4 my-2 rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
+    [ngStyle]="{ 'background-color': item.status === 'todo' ? 'lightblue' : (item.status === 'inprogress' ? 'lightyellow' : 'lightgreen') }"
+    cdkDrag>{{item.name}}</div>
+  </div>
+</div>
+
+<!-- Done Section -->
+<div class="example-container bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition duration-300 ease-in-out transform hover:scale-105">
+  <h2 class="text-3xl text-green-500 mb-4 text-center">Done</h2>
+  <div cdkDropList id="doneList" [cdkDropListData]="done" (cdkDropListDropped)="drop($event)" class="example-list p-4 rounded-lg shadow-inner">
+    <div *ngFor="let item of done" class="example-box p-4 my-2 rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
+    [ngStyle]="{ 'background-color': item.status === 'todo' ? 'lightblue' : (item.status === 'inprogress' ? 'lightyellow' : 'lightgreen') }"
+    cdkDrag>{{item.name}}</div>
+  </div>
+</div>
+
 
     </div>
   </div>

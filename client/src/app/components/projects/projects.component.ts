@@ -15,7 +15,7 @@ export class ProjectsComponent implements OnInit {
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.projectForm = this.formBuilder.group({
-      project_name: ['', Validators.required],
+      name: ['', Validators.required],
       description: ['', Validators.required]
     });
   }
