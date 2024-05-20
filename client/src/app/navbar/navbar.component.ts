@@ -18,8 +18,15 @@ export class NavbarComponent implements OnInit {
   username: string | null = null;
   userId: string | null = null;
   mobileMenuOpen: boolean = false;
+  currentUrl: string | undefined;
 
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(private router: Router, private apiService: ApiService) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl = event.url;
+      }
+    });
+  }
 
   ngOnInit() {
     console.log('Navbar initialized');
