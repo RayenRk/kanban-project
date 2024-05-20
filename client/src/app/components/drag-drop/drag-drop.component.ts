@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TrackByFunction } from '@angular/core';
 import {
   CdkDragDrop,
   DragDropModule,
@@ -22,6 +22,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { DialogInprogressComponent } from '../dialog-inprogress/dialog-inprogress.component';
 import { DialogDoneComponent } from '../dialog-done/dialog-done.component';
 import { ActivatedRoute } from '@angular/router';
+import { DialogTaskComponent } from '../dialog-task/dialog-task.component';
 
 @Component({
   selector: 'app-drag-drop',
@@ -34,6 +35,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./drag-drop.component.scss'],
 })
 export class DragDropComponent implements OnInit {
+  trackByFn!: TrackByFunction<Task>;
 
   constructor(private apiService: ApiService,public dialog: MatDialog, private route:ActivatedRoute) {}
 
@@ -70,7 +72,20 @@ export class DragDropComponent implements OnInit {
     }
   }
 
-  deleteTask(taskId: string): void {
+  openTaskDialog(task: Task): void {
+    
+    this.dialog.open(DialogTaskComponent, {
+      width: '700px',
+      data: {
+        task,
+        projectName: this.projectname,
+        currentUserName: this.username,
+      }
+    });
+  }
+
+  deleteTask(event: Event ,taskId: string): void {
+    event.stopPropagation();
     if (this.apiService.isLoggedIn()) {
       this.apiService.deleteTask(taskId).subscribe(
         (data) => {
