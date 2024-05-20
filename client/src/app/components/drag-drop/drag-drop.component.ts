@@ -21,6 +21,7 @@ import {MatDialog,} from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { DialogInprogressComponent } from '../dialog-inprogress/dialog-inprogress.component';
 import { DialogDoneComponent } from '../dialog-done/dialog-done.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-drag-drop',
@@ -33,7 +34,8 @@ import { DialogDoneComponent } from '../dialog-done/dialog-done.component';
   styleUrls: ['./drag-drop.component.scss'],
 })
 export class DragDropComponent implements OnInit {
-  constructor(private apiService: ApiService,public dialog: MatDialog) {}
+
+  constructor(private apiService: ApiService,public dialog: MatDialog, private route:ActivatedRoute) {}
 
   tasks$!: Observable<any[]>;
   tasks: Task[] = [];
@@ -41,14 +43,19 @@ export class DragDropComponent implements OnInit {
   progress: Task[] = [];
   done: Task[] = [];
   username: string | null = null;
+  projectname: string | null = null;
 
 
   ngOnInit(): void {
     this.username =this.apiService.getUsername();
+    this.apiService.getProjectNameById(this.route.snapshot.paramMap.get('projectId')!).subscribe((projectName: string) => {
+      this.projectname = projectName;
+    });
     // Check if user is authenticated before fetching projects
     if (this.apiService.isLoggedIn()) {
-    this.apiService.getAllTasksCurrent().subscribe((data: Task[]) => {
-      //this.apiService.findTasksOfEachUser(this.apiService.getUserId()).subscribe((data: Task[]) => {
+        const projectId = this.route.snapshot.paramMap.get('projectId');
+        this.apiService.getAllTasksCurrentWithProject(projectId!).subscribe((data: Task[]) => {
+        //this.apiService.findTasksOfEachUser(this.apiService.getUserId()).subscribe((data: Task[]) => {
         
         this.tasks = data;
         this.todo = this.tasks.filter((task) => task.status === 'todo');

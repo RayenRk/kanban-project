@@ -16,6 +16,7 @@ const routes: Routes = [
   { path: 'new-user', component: UsersComponent },
   { path: 'new-project', component: ProjectsComponent },
   { path: 'new-task', component: TasksComponent },
+  { path: 'board/:projectId', component: DragDropComponent },
 ];
 
 

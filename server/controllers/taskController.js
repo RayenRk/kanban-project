@@ -136,5 +136,22 @@ const getAllTasksByUser = async (req, res) => {
     }
 }
 
+const getAllTasksByUserAndProject = async (req, res) => {
+    try {
+        // Retrieve the user ID and project ID from the request parameters
+        const { projectId, userId } = req.params;
 
-module.exports = { getAllTasks, getTaskById, newTask, createTask, updateTask, deleteTask,addUserToTask, getAllTasksByUser }; //createTask,
+        // Query the database for tasks associated with the user ID and project ID
+        const tasks = await Tasks.find({ project: projectId, responsible: userId });
+
+        // Return the tasks in the response
+        res.status(200).json(tasks);
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error('Error fetching tasks:', error);
+        res.status(500).json({ message: 'An error occurred while fetching tasks.' });
+    }
+}
+
+
+module.exports = { getAllTasks, getTaskById, newTask, createTask, updateTask, deleteTask,addUserToTask, getAllTasksByUser, getAllTasksByUserAndProject }; //createTask,

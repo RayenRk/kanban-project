@@ -206,6 +206,23 @@ export class ApiService {
     );
   }
 
+  getAllTasksCurrentWithProject(projectId: string): Observable<any[]> {
+    const userId = this.getUserIdFromLocalStorage();
+    if (!userId) {
+      return throwError('User ID not found in local storage');
+    }
+  
+    return this.http.get<any[]>(`${this.apiUrl}taskRouter/alltasksbyuserandproject/${projectId}/${userId}`, {
+      headers: this.getAuthHeaders()
+    }).pipe(
+      catchError(error => {
+        console.error('Error fetching tasks:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
+
   newTask(taskData: any): Observable<any> {
     const userId = this.getUserIdFromLocalStorage();
     if (!userId) {
@@ -299,6 +316,18 @@ export class ApiService {
         return throwError(error);
       })
     );
+  }
+
+  // get project name
+  getProjectNameById(projectId: string): Observable<string> {
+    return this.http.get<{ projectName: string }>(`${this.apiUrl}projectRouter/getprojectname/${projectId}`)
+      .pipe(
+        map(response => response.projectName),
+        catchError(error => {
+          console.error('Error fetching project name:', error);
+          return throwError(error);
+        })
+      );
   }
 
   

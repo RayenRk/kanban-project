@@ -12,5 +12,6 @@ router.delete('/deletetask/:idtask', taskController.deleteTask); //authenticate.
 router.post('/createTask', authenticate.authenticate, authenticate.authorize,taskController.createTask); // authenticate.authenticate, authenticate.authorize,
 router.patch('/addUserToTask/:taskId/:userId',authenticate.authenticate, authenticate.authorize, taskController.addUserToTask); // authenticate.authenticate, authenticate.authorize,
 router.get('/alltasksbyuser/:userId',taskController.getAllTasksByUser); // authenticate.authenticate, authenticate.authorize,
+router.get('/alltasksbyuserandproject/:projectId/:userId',taskController.getAllTasksByUserAndProject); // authenticate.authenticate, authenticate.authorize,
 
 module.exports = router;
