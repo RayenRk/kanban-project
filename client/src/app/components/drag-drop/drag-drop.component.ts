@@ -75,7 +75,8 @@ export class DragDropComponent implements OnInit {
       this.apiService.deleteTask(taskId).subscribe(
         (data) => {
           console.log('Task deleted successfully', data);
-          this.apiService.getAllTasksCurrent().subscribe((data: Task[]) => {
+          const projectId = this.route.snapshot.paramMap.get('projectId');
+          this.apiService.getAllTasksCurrentWithProject(projectId!).subscribe((data: Task[]) => {
             this.tasks = data;
             this.todo = this.tasks.filter((task) => task.status === 'todo');
             this.progress = this.tasks.filter((task) => task.status === 'inprogress');
