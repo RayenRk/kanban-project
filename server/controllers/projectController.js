@@ -111,6 +111,19 @@ const deleteProject = async (req, res) => {
   }
 };
 
+const removeProject = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    // Delete project from database
+    await Project.findByIdAndDelete(projectId);
+    res.status(200).json({ message: 'Project deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting project:', error);
+    res.status(500).json({ message: 'An error occurred while deleting project' });
+  }
+};
+
+
 const getProjectNameById = async (req, res) => {
     try {
       const { projectId } = req.params;
@@ -136,4 +149,5 @@ module.exports = {
   findTasksOfEachProject,
   addUserToProject,
   getProjectNameById, 
+  removeProject,
 };

@@ -5,13 +5,19 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } 
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [ReactiveFormsModule,
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    MatIconModule,
+    MatButtonModule,
+    MatButton,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
@@ -39,4 +45,24 @@ export class DashboardComponent implements OnInit {
   navigateToTaskBoard(projectId: string): void {
     this.router.navigate(['/board', projectId]);
   }
+
+  // In your Angular component class
+  removeProject(event: MouseEvent ,projectId: string): void {
+  // Prevent event propagation
+  event.stopPropagation();
+  // convert the project ID to a string
+  projectId = String(projectId);
+  this.apiService.removeProject(projectId).subscribe(
+    () => {
+      console.log('Project deleted successfully');
+      // Optionally, reload projects or update local list
+      this.fetchProjects();
+    },
+    error => {
+      console.error('Error deleting project:', error);
+      // Handle error, show toast, etc.
+    }
+  );
+}
+
 }

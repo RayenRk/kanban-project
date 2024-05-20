@@ -47,6 +47,7 @@ export class DialogInprogressComponent implements OnInit{
     if (this.taskForm.invalid) {
       return;
     }
+    const projectId = window.location.pathname.split('/')[2];
 
     const details: Task = {
       name: this.taskForm.value.name,
@@ -57,7 +58,7 @@ export class DialogInprogressComponent implements OnInit{
     };
 
 
-    this.apiService.newTask(details).subscribe(
+    this.apiService.newTaskWithProject(projectId,details).subscribe(
       (newTask: Task) => {
         this.tasks.push(newTask);
         if (newTask.status === 'todo') {

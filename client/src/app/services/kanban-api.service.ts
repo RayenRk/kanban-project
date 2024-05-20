@@ -238,6 +238,23 @@ export class ApiService {
     );
   }
 
+  newTaskWithProject(projectId: string, taskData: any): Observable<any> {
+    const userId = this.getUserIdFromLocalStorage();
+    if (!userId) {
+      return throwError('User ID not found in local storage');
+    }
+  
+    return this.http.post<any>(`${this.apiUrl}taskRouter/newtaskwithproject/${projectId}/${userId}`, taskData, {
+      headers: this.getAuthHeaders()
+    }).pipe(
+      catchError(error => {
+        console.error('Create new task error:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
+
   getAllTasks(): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.get<any>(`${this.apiUrl}taskRouter/alltasks`, { headers })
@@ -329,6 +346,19 @@ export class ApiService {
         })
       );
   }
+
+  // In your Angular service (e.g., project.service.ts)
+removeProject(projectId: string): Observable<any> {
+  return this.http.delete<any>(`${this.apiUrl}projectRouter/removeproject/${projectId}`, {
+    headers: this.getAuthHeaders()
+  }).pipe(
+    catchError(error => {
+      console.error('Error deleting project:', error);
+      return throwError(error);
+    })
+  );
+}
+
 
   
 }

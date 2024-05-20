@@ -13,5 +13,6 @@ router.post('/createTask', authenticate.authenticate, authenticate.authorize,tas
 router.patch('/addUserToTask/:taskId/:userId',authenticate.authenticate, authenticate.authorize, taskController.addUserToTask); // authenticate.authenticate, authenticate.authorize,
 router.get('/alltasksbyuser/:userId',taskController.getAllTasksByUser); // authenticate.authenticate, authenticate.authorize,
 router.get('/alltasksbyuserandproject/:projectId/:userId',taskController.getAllTasksByUserAndProject); // authenticate.authenticate, authenticate.authorize,
+router.post('/newtaskwithproject/:projectId/:userId', taskController.newTaskWithProject); // authenticate.authenticate, authenticate.authorize,
 
 module.exports = router;

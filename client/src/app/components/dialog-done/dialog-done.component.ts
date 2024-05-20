@@ -47,6 +47,7 @@ export class DialogDoneComponent implements OnInit{
     if (this.donetaskForm.invalid) {
       return;
     }
+    const projectId = window.location.pathname.split('/')[2];
 
     const details: Task = {
       name: this.donetaskForm.value.name,
@@ -57,7 +58,7 @@ export class DialogDoneComponent implements OnInit{
     };
 
     // new task is added to the done list of tasks
-    this.apiService.newTask(details).subscribe(
+    this.apiService.newTaskWithProject(projectId,details).subscribe(
       (task: Task) => {
         this.done.push(task);
       }

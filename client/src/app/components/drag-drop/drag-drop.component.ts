@@ -98,6 +98,7 @@ export class DragDropComponent implements OnInit {
       width: '400px',
       enterAnimationDuration,
       exitAnimationDuration,
+      data: { projectId: this.route.snapshot.paramMap.get('projectId')}
     });
   }
 
