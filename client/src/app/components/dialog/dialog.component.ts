@@ -72,11 +72,17 @@ export class DialogComponent implements OnInit{
         console.error('Error adding new task', error);
       }
     );
+    this.dialogRef.afterClosed().subscribe(() => {
+      // reload after delay to allow for the new task to be added
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    });
   }
 
+  // Implement the method called submit() to close the dialog after clicking Add
   submit(): void {
     this.newTask();
-    this.dialogRef.close();
   }
 
   close(): void {

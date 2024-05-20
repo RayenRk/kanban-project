@@ -77,6 +77,9 @@ export class DialogInprogressComponent implements OnInit{
   submit(): void {
     this.newTask();
     this.dialogRef.close();
+    // refresh the page beneath the dialog after closing the dialog box
+    window.location.reload();
+
   }
 
   close(): void {

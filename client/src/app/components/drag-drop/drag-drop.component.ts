@@ -61,8 +61,29 @@ export class DragDropComponent implements OnInit {
       // Handle unauthenticated user
       console.error('User is not authenticated.');
     }
+  }
 
-
+  deleteTask(taskId: string): void {
+    if (this.apiService.isLoggedIn()) {
+      this.apiService.deleteTask(taskId).subscribe(
+        (data) => {
+          console.log('Task deleted successfully', data);
+          this.apiService.getAllTasksCurrent().subscribe((data: Task[]) => {
+            this.tasks = data;
+            this.todo = this.tasks.filter((task) => task.status === 'todo');
+            this.progress = this.tasks.filter((task) => task.status === 'inprogress');
+            this.done = this.tasks.filter((task) => task.status === 'done');
+          }
+          );
+        },
+        (error) => {
+          console.error('Error deleting task', error);
+        }
+      );
+    } else {
+      // Handle unauthenticated user
+      console.error('User is not authenticated.');
+    }
   }
 
   openDialogTodo(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -136,8 +157,6 @@ export class DragDropComponent implements OnInit {
       );
     }
   }
-
-  // implement addTask method
 }
 
 

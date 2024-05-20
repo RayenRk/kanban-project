@@ -290,9 +290,11 @@ export class ApiService {
     );
   }
 
-  deleteTask(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}deletetask/${id}`).pipe(
-      catchError(error => {
+  // New method to delete a task by curent task ID
+  deleteTask(taskId: string): Observable<any> {
+    const taskIdString = taskId.toString(); // Convert taskId to string
+    return this.http.delete<any>(`${this.apiUrl}taskRouter/deleteTask/${taskIdString}`).pipe(
+      catchError((error) => {
         console.error('Delete task error:', error);
         return throwError(error);
       })
