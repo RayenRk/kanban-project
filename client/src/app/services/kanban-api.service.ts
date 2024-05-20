@@ -189,6 +189,18 @@ export class ApiService {
       );
   }
 
+  getAllProjectsByUser(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    const userId = this.getUserIdFromLocalStorage();
+    return this.http.get<any>(`${this.apiUrl}projectRouter/allprojectsbyuser/${userId}`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Get all projects error:', error);
+          return throwError(error);
+        })
+      );
+  }
+
   getAllTasksCurrent(): Observable<any[]> {
     const userId = this.getUserIdFromLocalStorage();
     if (!userId) {

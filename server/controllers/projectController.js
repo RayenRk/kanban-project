@@ -13,6 +13,24 @@ const getAllProjects = async (req, res) => {
   }
 };
 
+const getAllProjectsByUser = async (req, res) => {
+    try {
+        // Retrieve the user ID from the request parameters
+        const { userId } = req.params;
+
+        // Query the database for projects associated with the user ID
+        const projects = await Project.find({ owner: userId });
+
+        // Return the projects in the response
+        res.status(200).json(projects);
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error('Error fetching projects:', error);
+        res.status(500).json({ message: 'An error occurred while fetching projects.' });
+    }
+};
+
+
 const findTasksOfEachProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.idproject).populate(
@@ -150,4 +168,5 @@ module.exports = {
   addUserToProject,
   getProjectNameById, 
   removeProject,
+  getAllProjectsByUser,
 };

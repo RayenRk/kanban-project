@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchProjects(): void {
-    this.projects$ = this.apiService.getAllProjects();
+    this.projects$ = this.apiService.getAllProjectsByUser();
   }
 
   navigateToTaskBoard(projectId: string): void {

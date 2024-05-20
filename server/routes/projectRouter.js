@@ -13,5 +13,6 @@ router.get('/FTOEP/:idproject',authenticate.authenticate, authenticate.authorize
 router.patch('/addUserToProject/:idproject/:userID',authenticate.authenticate, authenticate.authorize,  projectController.addUserToProject); //authenticate.authenticate, authenticate.authorize,
 router.get('/getprojectname/:projectId', projectController.getProjectNameById); // authenticate.authenticate, authenticate.authorize,
 router.delete('/removeproject/:projectId',authenticate.authenticate, authenticate.authorize, projectController.removeProject); // authenticate.authenticate, authenticate.authorize,
+router.get('/allprojectsbyuser/:userId', projectController.getAllProjectsByUser); // authenticate.authenticate, authenticate.authorize,
 
 module.exports = router;
