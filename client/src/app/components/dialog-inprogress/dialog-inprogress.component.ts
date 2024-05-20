@@ -72,6 +72,12 @@ export class DialogInprogressComponent implements OnInit{
         console.error('Error adding new task', error);
       }
     );
+    this.dialogRef.afterClosed().subscribe(() => {
+      // reload after delay to allow for the new task to be added
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    });
   }
 
   submit(): void {

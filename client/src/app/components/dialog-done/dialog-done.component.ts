@@ -62,6 +62,12 @@ export class DialogDoneComponent implements OnInit{
         this.done.push(task);
       }
     );
+    this.dialogRef.afterClosed().subscribe(() => {
+      // reload after delay to allow for the new task to be added
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    });
     
   }
 
