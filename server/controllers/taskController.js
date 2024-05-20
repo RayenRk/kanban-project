@@ -98,19 +98,26 @@ const addUserToTask = async (req, res) => {
 
 
 const newTask = async (req, res) => {
+    // create a new task with current user id as the responsible field and the status depending on the html div id
     try {
-        const task = await Tasks.create(req.body);
-        const PROJECT = await Project.findById(req.params.idproject);
-
-        if (!PROJECT) {
-            return res.status(404).send('Project not found');
-        } else {
-            res.status(201).json({ project: PROJECT, task: task });
+        const user = await User.findById(req.params.userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
         }
+        const task = await Tasks.create({
+            name: req.body.name,
+            description: req.body.description,
+            status: req.body.status,
+            // project: req.body.idproject,
+            responsible: user._id
+        });
+        res.status(201).json(task);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-};
+}
+    
+
 
 const getAllTasksByUser = async (req, res) => {
     try {

@@ -1,22 +1,27 @@
-<div class="container flex justify-start text-center pl-40 pt-8 h-1 text-xl">
+<div class="container flex justify-start text-center pl-40 pt-6 h-1 text-xl">
     <h2>Welcome back to ProjectName {{ username }}</h2>
   </div>
   
-  <div class="container flex flex-col justify-center items-center p-24">
+  <div class="container flex flex-col justify-center items-center pt-20">
     <div cdkDropListGroup>
       <div class="example-container">
         <h2 class="text-2xl text-amber-700 mb-2">To do</h2>
   
         <div cdkDropList id="todoList" [cdkDropListData]="todo" class="example-list" (cdkDropListDropped)="drop($event)">
           @for (item of todo; track item) {
-          <div class="example-box" cdkDrag>{{item.name}}</div>
+          <div class="example-box" cdkDrag>{{item.name}}
+            <button mat-icon-button color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
           }
+          <div class="container flex justify-center items-center pt-2">
+            <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogTodo('0ms', '0ms')">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="container flex justify-center items-center pt-2">
-          <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialog('0ms', '0ms')">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
+        
       </div>
   
       <div class="example-container">
@@ -24,14 +29,19 @@
   
         <div id="progressList" cdkDropList [cdkDropListData]="progress" class="example-list" (cdkDropListDropped)="drop($event)">
           @for (item of progress; track item) {
-          <div class="example-box" cdkDrag>{{item.name}}</div>
+          <div class="example-box" cdkDrag>{{item.name}}
+            <button mat-icon-button color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
           }
+          <div class="container flex justify-center items-center pt-2">
+            <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogInprogress('0ms', '0ms')">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="container flex justify-center items-center pt-2">
-          <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialog('0ms', '0ms')">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
+        
       </div>
   
       <div class="example-container">
@@ -39,14 +49,19 @@
   
         <div id="doneList" cdkDropList [cdkDropListData]="done" class="example-list" (cdkDropListDropped)="drop($event)">
           @for (item of done; track item) {
-          <div class="example-box" cdkDrag>{{item.name}}</div>
+          <div class="example-box" cdkDrag>{{item.name}}
+            <button mat-icon-button color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
           }
+          <div class="container flex justify-center items-center pt-2">
+            <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogDone('0ms', '0ms')">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="container flex justify-center items-center pt-2">
-          <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialog('0ms', '0ms')">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
+        
       </div>
     </div>
   </div>

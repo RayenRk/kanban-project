@@ -17,20 +17,17 @@ import { MatInputModule } from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
-import {
-  MatDialog,
-  MatDialogRef,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogTitle,
-  MatDialogContent,
-} from '@angular/material/dialog';
+import {MatDialog,} from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
+import { DialogInprogressComponent } from '../dialog-inprogress/dialog-inprogress.component';
+import { DialogDoneComponent } from '../dialog-done/dialog-done.component';
 
 @Component({
   selector: 'app-drag-drop',
   standalone: true,
   imports: [DragDropModule, HttpClientModule, AsyncPipe,ReactiveFormsModule,CommonModule,MatFormFieldModule
-    ,MatInputModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule
+    ,MatInputModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule,
+    DialogInprogressComponent, DialogDoneComponent, DialogComponent
   ],
   templateUrl: './drag-drop.component.html',
   styleUrls: ['./drag-drop.component.scss'],
@@ -68,20 +65,33 @@ export class DragDropComponent implements OnInit {
 
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.dialog.open(DialogAnimationsExampleDialog, {
-      width: '250px',
+  openDialogTodo(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(DialogComponent, {
+      width: '400px',
       enterAnimationDuration,
       exitAnimationDuration,
-    })
+    });
+  }
+
+  openDialogInprogress(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(DialogInprogressComponent, {
+      width: '400px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+  openDialogDone(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(DialogDoneComponent, {
+      width: '400px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 
   fetchTasks(): void {
     this.tasks$ = this.apiService.getAllTasksCurrent();
-  }
-
-    
-    
+  }   
 
   // Implement the drop method
   drop(event: CdkDragDrop<any[]>) {
@@ -130,13 +140,4 @@ export class DragDropComponent implements OnInit {
   // implement addTask method
 }
 
-@Component({
-  selector: 'dialog-animations-example-dialog',
-  templateUrl: 'dialog-animations-example-dialog.html',
-  standalone: true,
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent
-    ,MatInputModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule]
-})
-export class DialogAnimationsExampleDialog {
-  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>) {}
-}
+

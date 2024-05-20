@@ -78,6 +78,9 @@
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
+    padding-inline: 10px;
+    padding-bottom: 6px;
+    padding-top: 6px;
     cursor: move;
     background: white;
     font-size: 14px;
@@ -150,4 +153,17 @@
     font-size: 12px;
     font-weight :500;
   }
+
+  .dialog-content {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px;
+    width: 800px;
+  }
+
+  .md-dialog-container {
+    background-color: #000;
+    width: 250px;
+    height: 250px
+}
   

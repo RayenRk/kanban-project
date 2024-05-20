@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Task } from '../models/tasks';
+import e from 'express';
 
 @Injectable({
   providedIn: 'root',
@@ -195,11 +196,26 @@ export class ApiService {
     }
 
     return this.http.get<any[]>(`${this.apiUrl}taskRouter/alltasksbyuser/${userId}`, {
-      headers: this.getAuthHeaders(),
+      headers: this.getAuthHeaders()
     }).pipe(
       //map(tasks => tasks.filter(task => task.responsible === userId)),
       catchError(error => {
         console.error('Error fetching tasks:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  newTask(taskData: any): Observable<any> {
+    const userId = this.getUserIdFromLocalStorage();
+    if (!userId) {
+      return throwError('User ID not found in local storage');
+    }
+    return this.http.post<any>(`${this.apiUrl}taskRouter/newtask/${userId}`, taskData,
+    { headers : this.getAuthHeaders()
+    }).pipe(
+      catchError(error => {
+        console.error('Create new task error:', error);
         return throwError(error);
       })
     );
@@ -260,15 +276,6 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}getsingletask/${id}`).pipe(
       catchError(error => {
         console.error('Get task by ID error:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  newTask(projectId: string, taskData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}taskRouter/newTask/${projectId}`, taskData).pipe(
-      catchError(error => {
-        console.error('Create new task error:', error);
         return throwError(error);
       })
     );

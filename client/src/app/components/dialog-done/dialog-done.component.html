@@ -1,0 +1,23 @@
+<form [formGroup]="donetaskForm" (submit)="newTask()">
+    <h2 mat-dialog-title>Add New Task</h2>
+    <mat-dialog-content>
+        <mat-form-field class="example-full-width">
+            <mat-label class="example-full-width">New Task</mat-label>
+            <input matInput formControlName="name" id="name">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label class="example-full-width">Description</mat-label>
+            <textarea matInput formControlName="description" id="description"></textarea>          
+        </mat-form-field>
+        <input formControlName="status" id="status" value="done" type="hidden">
+          
+    <mat-dialog-actions>
+        <div class="container flex justify-center items-center">
+            <button mat-button mat-dialog-close onclick="close()">Cancel</button>
+            <button mat-button mat-dialog-close cdkFocusInitial type="submit">Add</button>
+        </div>
+    </mat-dialog-actions>
+    </mat-dialog-content>
+    </form>
+    
+    
