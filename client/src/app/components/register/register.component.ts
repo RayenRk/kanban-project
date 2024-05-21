@@ -2,18 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/kanban-api.service';
-import { User } from '../../models/users'; // Import the User interface
+import { User } from '../../models/users';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,CommonModule],
   templateUrl: './register.component.html',   
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
-  error: string = '';
+  showErrorAlert = false; // Variable for controlling the error alert
+  showSuccessAlert = false; // Variable for controlling the success alert
 
   constructor(
     private fb: FormBuilder,
@@ -32,6 +34,7 @@ export class RegisterComponent implements OnInit {
 
   register() {
     if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
       return;
     }
 
@@ -46,14 +49,17 @@ export class RegisterComponent implements OnInit {
       (response: User) => {
         // Handle successful registration
         console.log('Registration successful:', response);
-        // Redirect or perform other actions as needed
-        this.router.navigate(['/login']);
-
+        this.showSuccessAlert = true;
+        setTimeout(() => {
+          this.showSuccessAlert = false;
+          this.router.navigate(['/login']);
+        }, 1000); // Hide the alert and redirect after 3 seconds
       },
       (error) => {
         // Handle registration error
         console.error('Registration error:', error);
-        this.error = error.message || 'An error occurred during registration.';
+        this.showErrorAlert = true;
+        setTimeout(() => this.showErrorAlert = false, 3000); // Hide the alert after 3 seconds
       }
     );
   }

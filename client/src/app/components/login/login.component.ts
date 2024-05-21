@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ApiService } from '../../services/kanban-api.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  error: string | null = null;
-  isAuthenticated: boolean = false;
+  showErrorAlert = false; // Variable for controlling the error alert
+  showSuccessAlert = false; // Variable for controlling the success alert
 
   constructor(
     private fb: FormBuilder,
@@ -29,20 +29,26 @@ export class LoginComponent implements OnInit {
 
   login() {
     if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       return;
     }
-  
+
     const credentials = this.loginForm.value;
     this.apiService.login(credentials).subscribe(
       (response) => {
+        // Handle successful login
         console.log('Login successful:', response);
-        this.isAuthenticated = true;
-        window.location.href = '/home';
+        this.showSuccessAlert = true;
+        setTimeout(() => {
+          this.showSuccessAlert = false;
+          window.location.href = '/home'; // Redirect after showing the success alert
+        }, 1000); // Hide the alert after 3 seconds
       },
       (error) => {
+        // Handle login error
         console.error('Login error:', error);
-        this.error = error?.error?.message || 'An error occurred during login.';
-        this.isAuthenticated = false;
+        this.showErrorAlert = true;
+        setTimeout(() => this.showErrorAlert = false, 3000); // Hide the alert after 3 seconds
       }
     );
   }

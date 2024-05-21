@@ -11,7 +11,10 @@
 
       <div cdkDropList id="todoList" [cdkDropListData]="todo" class="example-list" (cdkDropListDropped)="drop($event)">
         <div *ngFor="let item of todo; trackBy: trackByFn" class="example-box" cdkDrag (click)="openTaskDialog(item)">
-          {{item.name}}
+          <div class="flex items-center">
+            <span class="material-icons text-yellow-500 mr-3">pending_actions</span>
+            <span class="font-semibold text-gray-700">{{item.name}}</span>
+          </div>
           <button mat-icon-button color="warn" (click)="deleteTask($event,item._id ?? ''); $event.stopPropagation();">
             <mat-icon>delete</mat-icon>
           </button>
@@ -29,7 +32,10 @@
 
       <div id="progressList" cdkDropList [cdkDropListData]="progress" class="example-list" (cdkDropListDropped)="drop($event)">
         <div *ngFor="let item of progress; trackBy: trackByFn" class="example-box" cdkDrag (click)="openTaskDialog(item)">
-          {{item.name}}
+          <div class="flex items-center">
+            <span class="material-icons text-blue-500 mr-3">play_circle_filled</span>
+            <span class="font-semibold text-gray-700">{{item.name}}</span>
+          </div>
           <button mat-icon-button color="warn" (click)="deleteTask($event,item._id ?? ''); $event.stopPropagation();">
             <mat-icon>delete</mat-icon>
           </button>
@@ -47,7 +53,10 @@
 
       <div id="doneList" cdkDropList [cdkDropListData]="done" class="example-list" (cdkDropListDropped)="drop($event)">
         <div *ngFor="let item of done; trackBy: trackByFn" class="example-box" cdkDrag (click)="openTaskDialog(item)">
-          {{item.name}}
+          <div class="flex items-center">
+            <span class="material-icons text-green-500 mr-3">check_circle</span>
+            <span class="font-semibold text-gray-700">{{item.name}}</span>
+          </div>
           <button mat-icon-button color="warn" (click)="deleteTask($event,item._id ?? ''); $event.stopPropagation();">
             <mat-icon>delete</mat-icon>
           </button>

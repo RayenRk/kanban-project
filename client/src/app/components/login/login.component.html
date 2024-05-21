@@ -9,14 +9,26 @@
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           Sign in to your account
         </h1>
+        <div class="absolute top-0 right-0 mt-8 mr-8 p-4 text-lg text-white bg-red-500 rounded-lg shadow-lg animate__animated animate__fadeIn" [hidden]="!showErrorAlert">
+          <span class="font-bold">Error!</span> User not found or password incorrect.
+        </div>
+        <div class="absolute top-0 right-0 mt-8 mr-8 p-4 text-lg text-white bg-green-500 rounded-lg shadow-lg animate__animated animate__fadeIn" [hidden]="!showSuccessAlert">
+          <span class="font-bold">Success!</span> Login successful.
+        </div>
         <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-4 md:space-y-6">
           <div class="flex flex-col">
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Username</label>
-            <input type="email" formControlName="username" id="email" class="input-field" placeholder="Username" required>
+            <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+            <input type="text" formControlName="username" id="username" class="input-field" placeholder="Username" required>
+            <div *ngIf="loginForm.get('username')!.invalid && loginForm.get('username')!.touched" class="text-red-500 text-sm mt-1">
+              Username is required.
+            </div>
           </div>
           <div class="flex flex-col">
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
             <input type="password" formControlName="password" id="password" class="input-field" placeholder="••••••••" required>
+            <div *ngIf="loginForm.get('password')!.invalid && loginForm.get('password')!.touched" class="text-red-500 text-sm mt-1">
+              Password is required.
+            </div>
           </div>
           <div class="flex items-center justify-between">
             <div class="flex items-start">
