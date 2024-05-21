@@ -12,8 +12,8 @@
         <input formControlName="status" id="status" value="inprogress" type="hidden">
     <mat-dialog-actions>
         <div class="container flex justify-center items-center">
-            <button mat-button mat-dialog-close onclick="close()">Cancel</button>
-            <button mat-button mat-dialog-close cdkFocusInitial type="submit">Add</button>
+            <button mat-button mat-dialog-close color="warn" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded mr-2">Cancel</button>
+            <button mat-button mat-dialog-close cdkFocusInitial color="basic" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add</button>
         </div>
     </mat-dialog-actions>
     </mat-dialog-content>

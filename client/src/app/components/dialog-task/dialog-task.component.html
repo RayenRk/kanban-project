@@ -1,24 +1,25 @@
 <div class="bg-white rounded-lg shadow-lg p-6 text-wrap">
-    <div class="flex flex-row justify-center items-left">
-    <h3 class="text-l font-bold mb-4 text-gray-700 flex-grow"><b>Project Name:</b> {{ data.projectName }}</h3>
-    <h3 class="text-l font-bold mb-4 text-gray-700"><b>Owner Name:</b> {{ data.currentUserName | titlecase}}</h3>
-    </div>
-    <div class="flex flex-row justify-center items-left">
-    <div class="text-gray-700 text-l flex-grow">
-        <h4 class="text-gray-600 font-bold"><b>Task Name:</b> {{ task.name }}</h4>
-    </div>
-    <div class="text-blue-600 text-l">
-        <h3 class="text-sm "><b>{{ task.status | titlecase }}</b></h3>
-    </div>
-    </div>
-    
-    <div class="border-t border-gray-400 my-4"></div>
-    <article class="text-gray-700 text-l text-wrap">
+  <div class="flex flex-row justify-center items-left">
+      <h3 class="text-l font-bold mb-4 text-gray-700 flex-grow"><b>Project Name:</b> {{ data.projectName }}</h3>
+      <h3 class="text-l font-bold mb-4 text-gray-700"><b>Owner Name:</b> {{ data.currentUserName | titlecase}}</h3>
+  </div>
+  <div class="flex flex-row justify-center items-left">
+      <div class="text-gray-700 text-l flex-grow">
+          <h4 class="text-gray-600 font-bold"><b>Task Name:</b> {{ task.name }}</h4>
+      </div>
+      <div class="text-blue-600 text-l">
+          <h3 class="text-sm "><b>{{ task.status | titlecase }}</b></h3>
+      </div>
+  </div>
+  
+  <div class="border-t border-gray-400 my-4"></div>
+  <article class="text-gray-700 text-l text-wrap">
       <h3><b>Description:</b></h3>
       <p class="text-l text-wrap">{{ task.description }}</p>
-    </article>
-    <div class="mt-6 flex justify-end">
-      <button mat-button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="onClose()">Close</button>
-    </div>
-</div>
+  </article>
   
+  <div class="mt-6 flex justify-end gap-4">
+      <button mat-button class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded" (click)="openEditDialog()">Edit</button>
+      <button mat-button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" (click)="onClose()">Close</button>
+  </div>
+</div>
