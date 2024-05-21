@@ -1,14 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ApiService } from '../services/kanban-api.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   providers: [ApiService],
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, TitleCasePipe],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
@@ -22,6 +23,8 @@ export class NavbarComponent implements OnInit {
   mobileMenuOpen: boolean = false;
   currentUrl: string | undefined;
   userRole!: string | null;
+  loginDate: Date | null = null;
+  showUserInfo: boolean = false;
 
   constructor(private router: Router, private apiService: ApiService) {
     this.router.events.subscribe((event) => {
@@ -50,6 +53,7 @@ export class NavbarComponent implements OnInit {
       this.isLoggedIn = loggedIn;
       this.username = this.apiService.getUsername();
       this.userId = this.apiService.getUserIdFromLocalStorage();
+      this.loginDate = new Date();
     });
 
     this.userRole = this.apiService.getUserRole();
@@ -58,6 +62,19 @@ export class NavbarComponent implements OnInit {
   }
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  toggleUserInfo() {
+    this.showUserInfo = !this.showUserInfo;
+  }
+
+  // Method to close popup when clicking away
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const clickedInside = event.target && (event.target as HTMLElement).closest('.relative');
+    if (!clickedInside) {
+      this.showUserInfo = false;
+    }
   }
   
   logout() {
@@ -70,5 +87,9 @@ export class NavbarComponent implements OnInit {
         console.error('Logout error:', error);
       }
     );
+    this.isLoggedIn = false;
+    this.username = '';
+    this.userRole = '';
+    this.loginDate = null; // Clear login date
   }
 }
