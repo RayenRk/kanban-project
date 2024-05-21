@@ -42,14 +42,20 @@ npm install
 
 Update the `.env` file with your MongoDB connection string and other configuration settings.
 
-5. Start the development server:
+1. Start the Server:
 
 ```
 npm start
 ```
 
+6. Run the Client:
 
-6. Open your browser and navigate to `http://localhost:4200` to access the app.
+```
+ng serve
+```
+
+
+7. Open your browser and navigate to `http://localhost:4200` to access the app.
 
 ## Contributing
 
