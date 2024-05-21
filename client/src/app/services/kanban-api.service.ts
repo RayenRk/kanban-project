@@ -90,6 +90,7 @@ export class ApiService {
       localStorage.removeItem('userId');
       localStorage.removeItem('token');
       localStorage.removeItem('username');
+      localStorage.removeItem('role');
       this.loggedInStatus.next(this.isLoggedIn());
     }
   }

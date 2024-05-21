@@ -15,9 +15,9 @@ const routes: Routes = [
   { path: 'board', component: DragDropComponent }, // Drag & Drop route
   { path: 'login', component: LoginComponent,canActivate: [LoginAuthGuard],data:{ refresh:true }}, // Login route
   { path: 'register', component: RegisterComponent }, // Register route
-  { path: 'new-user', component: UsersComponent ,canActivate: [AuthGuard],data: { roles: ['!user',''] }},
-  { path: 'new-project', component: ProjectsComponent,canActivate: [AuthGuard],data: { roles: ['!user',''] } },
-  { path: 'new-task', component: TasksComponent,canActivate: [AuthGuard],data: { roles: ['!user',''] } },
+  { path: 'new-user', component: UsersComponent ,canActivate: [AuthGuard],data: { roles: ['po','admin'] }},
+  { path: 'new-project', component: ProjectsComponent,canActivate: [AuthGuard],data: { roles: ['po','admin'] } },
+  { path: 'new-task', component: TasksComponent,canActivate: [AuthGuard],data: { roles: ['po','admin'] } },
   { path: 'board/:projectId', component: DragDropComponent },
 ];
 

@@ -37,17 +37,7 @@
               Password is required.
             </div>
           </div>
-          <div class="flex flex-col">
-            <label for="role" class="text-gray-500 mb-1">Role</label>
-            <select id="role" class="input-field" formControlName="role">
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-              <option value="po">Project Owner</option>
-            </select>
-            <div *ngIf="registerForm.get('role')!.invalid && registerForm.get('role')!.touched" class="text-red-500 text-sm mt-1">
-              Role is required.
-            </div>
-          </div>
+          
           <button type="submit" class="btn-primary">Sign up</button>
           <p class="text-sm font-light text-gray-500 dark:text-sky-700">
             Already have an account? <a href="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</a>
