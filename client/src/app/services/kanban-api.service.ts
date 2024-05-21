@@ -140,7 +140,7 @@ export class ApiService {
   
   getAllUsers(): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.get<any>(`${this.apiUrl}user/users`, { headers })
+    return this.http.get<any>(`${this.apiUrl}api/user/getAllUser`, { headers })
       .pipe(
         catchError(error => {
           console.error('Get all users error:', error);
