@@ -6,16 +6,18 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { UsersComponent } from './components/users/users.component';
+import { AuthGuard } from './auth.guard';
+import { LoginAuthGuard } from './loginAuth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' }, 
   { path: 'home', component: DashboardComponent },// Redirect root path to drag-drop
   { path: 'board', component: DragDropComponent }, // Drag & Drop route
-  { path: 'login', component: LoginComponent }, // Login route
+  { path: 'login', component: LoginComponent,canActivate: [LoginAuthGuard],data:{ refresh:true }}, // Login route
   { path: 'register', component: RegisterComponent }, // Register route
-  { path: 'new-user', component: UsersComponent },
-  { path: 'new-project', component: ProjectsComponent },
-  { path: 'new-task', component: TasksComponent },
+  { path: 'new-user', component: UsersComponent ,canActivate: [AuthGuard],data: { roles: ['admin','po'] }},
+  { path: 'new-project', component: ProjectsComponent,canActivate: [AuthGuard],data: { roles: ['admin','po'] } },
+  { path: 'new-task', component: TasksComponent,canActivate: [AuthGuard],data: { roles: ['admin','po'] } },
   { path: 'board/:projectId', component: DragDropComponent },
 ];
 

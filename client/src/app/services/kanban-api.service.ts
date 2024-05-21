@@ -3,8 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Task } from '../models/tasks';
-import e from 'express';
 import { User } from '../models/users';
 
 @Injectable({
@@ -105,11 +103,15 @@ export class ApiService {
     );
   }
 
+
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/login`, credentials).pipe(
       tap(response => {
         this.setToken(response.token);
         this.loggedInStatus.next(true); 
+        localStorage.setItem('role', response.role);
+        localStorage.setItem('loggedIn', JSON.stringify(true)); // or false
+
       }),
       catchError((error) => {
         console.error('Login error:', error);
@@ -123,6 +125,8 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}api/auth/logout`, {}).pipe(
       tap(() => {
         this.clearToken();
+        localStorage.removeItem('role');
+        localStorage.removeItem('loggedIn');
       }),
       catchError((error) => {
         console.error('Logout error:', error);
@@ -142,6 +146,12 @@ export class ApiService {
       );
   }
   
+  getRole(): string | null {
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('role');
+    }
+    return null;
+  }
 
   getUserById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}users/${id}`).pipe(

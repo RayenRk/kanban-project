@@ -29,10 +29,10 @@
                [ngClass]="{'bg-gray-900 text-white': currentUrl === '/home', 'text-gray-300 hover:bg-gray-700 hover:text-white': currentUrl !== '/home'}" 
                class="rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Projects</a>
             
-            <a *ngIf="isLoggedIn" href="/new-project" 
+            <a *ngIf="this.isLoggedIn == true && this.role == 'admin'||'po' " href="/new-project" 
                [ngClass]="{'bg-gray-900 text-white': currentUrl === '/new-project', 'text-gray-300 hover:bg-gray-700 hover:text-white': currentUrl !== '/new-project'}" 
                class="rounded-md px-3 py-2 text-sm font-medium">New Project</a>
-            <a *ngIf="isLoggedIn" href="/new-user" 
+            <a *ngIf="isLoggedIn && this.role == 'admin'||'po'" href="/new-user" 
                [ngClass]="{'bg-gray-900 text-white': currentUrl === '/new-user', 'text-gray-300 hover:bg-gray-700 hover:text-white': currentUrl !== '/new-user'}" 
                class="rounded-md px-3 py-2 text-sm font-medium">New User</a>
             <a *ngIf="!isLoggedIn" href="/login" 

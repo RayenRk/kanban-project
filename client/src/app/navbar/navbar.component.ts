@@ -19,6 +19,7 @@ export class NavbarComponent implements OnInit {
   userId: string | null = null;
   mobileMenuOpen: boolean = false;
   currentUrl: string | undefined;
+  role: string | null = null;
 
   constructor(private router: Router, private apiService: ApiService) {
     this.router.events.subscribe((event) => {
@@ -28,19 +29,21 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    console.log('Navbar initialized');
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.showNavbar = !['/login', '/register'].includes(event.urlAfterRedirects);
-      }
-    });
+    ngOnInit() {
+      console.log('Navbar initialized');
+      this.router.events.subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          this.showNavbar = !['/login', '/register'].includes(event.urlAfterRedirects);
+        }
+      });
   
     // Check login status initially
-    this.isLoggedIn = this.apiService.isLoggedIn();
+    const loggedIn = localStorage.getItem('loggedIn');
+    this.isLoggedIn = loggedIn ? JSON.parse(loggedIn) : null;    
+    console.log('Initial login status:', this.isLoggedIn);
     this.username = this.apiService.getUsername();
     this.userId = this.apiService.getUserIdFromLocalStorage();
-  
+    this.role = this.apiService.getRole();
     // Subscribe to changes in login status
     this.apiService.loginStatus.subscribe((loggedIn) => {
       console.log('Login status changed:', loggedIn);

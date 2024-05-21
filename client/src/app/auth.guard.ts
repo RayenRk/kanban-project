@@ -1,20 +1,34 @@
+
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { ApiService } from './services/kanban-api.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+
+@Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
+    constructor(
+        private router: Router,
+        private authService: ApiService
+    ) { }
 
-  constructor(private apiService: ApiService, private router: Router) {}
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+       
+    
+      const currentUser  = this.authService.getRole();
+      if (currentUser) {
+          const allowedRoles : string []= route.data['roles'] as Array<string>;
+          if (allowedRoles &&  !allowedRoles.includes(currentUser)) {
+             this.router.navigate(['/home']);
+              return false;
+          }
+         
+          return true;
+          
+      }
 
-  canActivate(): boolean {
-    if (this.apiService.isLoggedIn()) {
-      return true;
-    } else {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
       return false;
-    }
+     
   }
+  
 }
