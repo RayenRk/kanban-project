@@ -11,5 +11,6 @@ router.get('/:id', authenticate.authenticate, authenticate.authorize,userControl
 router.post('/create', authenticate.authenticate, authenticate.authorize, userController.createUser);
 router.put('/:id', authenticate.authenticate, authenticate.authorize, userController.updateUser);
 router.delete('/:id', authenticate.authenticate, authenticate.authorize , userController.deleteUser);
+router.get('/getuser/:id', userController.getUserWithId);
 
 module.exports = router;

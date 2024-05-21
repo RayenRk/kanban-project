@@ -24,6 +24,7 @@ import {MatButtonModule} from '@angular/material/button';
 })
 export class DashboardComponent implements OnInit {
   projects$!: Observable<any>;
+  userRole!: string | null;
 
   constructor(private apiService: ApiService, private router: Router) {}
 
@@ -36,6 +37,8 @@ export class DashboardComponent implements OnInit {
       // Handle unauthenticated user
       console.error('User is not authenticated.');
     }
+
+    this.userRole = this.apiService.getUserRole();
   }
 
   fetchProjects(): void {

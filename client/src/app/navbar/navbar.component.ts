@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ApiService } from '../services/kanban-api.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,12 +13,15 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+
+  @Input() currentUser: any;
   showNavbar: boolean = true;
   isLoggedIn: boolean = false;
   username: string | null = null;
   userId: string | null = null;
   mobileMenuOpen: boolean = false;
   currentUrl: string | undefined;
+  userRole!: string | null;
 
   constructor(private router: Router, private apiService: ApiService) {
     this.router.events.subscribe((event) => {
@@ -48,6 +51,10 @@ export class NavbarComponent implements OnInit {
       this.username = this.apiService.getUsername();
       this.userId = this.apiService.getUserIdFromLocalStorage();
     });
+
+    this.userRole = this.apiService.getUserRole();
+    
+
   }
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;

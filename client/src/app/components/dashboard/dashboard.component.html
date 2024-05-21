@@ -13,7 +13,7 @@
       <div class="pt-4 pl-6 pr-6 pb-6 flex flex-col justify-center items-left">
         <div class="flex flex-row justify-center items-center">
           <h2 class="text-xl font-bold text-gray-900 dark:text-white pt-4 flex-grow">{{ project.name }}</h2>
-          <button mat-icon-button color="warn" (click)="removeProject($event, project._id)">
+          <button *ngIf="userRole !=='user'" mat-icon-button color="warn" (click)="removeProject($event, project._id)">
             <mat-icon>delete</mat-icon>
           </button>         
         </div>

@@ -44,6 +44,13 @@ export class ApiService {
     return null;
   }
 
+  getUserRole(): string | null {
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('role');
+    }
+    return null;
+  }
+
   isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }  
@@ -67,10 +74,12 @@ export class ApiService {
         const decodedToken = this.jwtHelper.decodeToken(token);
         localStorage.setItem('userId', decodedToken?.userId || '');
         localStorage.setItem('username', decodedToken?.username || '');
+        localStorage.setItem('role', decodedToken?.role || '');
       } else {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
+        localStorage.removeItem('role');
       }
       this.loggedInStatus.next(this.isLoggedIn());
     }
@@ -140,8 +149,10 @@ export class ApiService {
       );
   }
 
-  getUserById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}users/${id}`).pipe(
+  getUserById(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    const userId = this.getUserIdFromLocalStorage();
+    return this.http.get<any>(`${this.apiUrl}api/user/getuser/${userId}`, { headers }).pipe(
       catchError((error) => {
         console.error('Get user by ID error:', error);
         return throwError(error);
