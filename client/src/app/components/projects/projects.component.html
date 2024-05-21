@@ -5,9 +5,9 @@
     <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
 
     <!-- Project Form -->
-    <div class="w-full flex flex-col justify-center items-left relative max-w-3xl p-8 bg-white dark:bg-gray-800 shadow-md rounded-2xl overflow-hidden transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-        <h2 class="mb-6 text-3xl font-extrabold text-gray-900 dark:text-white text-center animate__animated animate__fadeInDown">Create a New Project</h2>
-        <form [formGroup]="projectForm" (ngSubmit)="addProject()" class="animate__animated animate__fadeInUp animate__delay-1s">
+    <div class="w-full flex flex-col justify-center items-left relative max-w-3xl p-8 bg-white dark:bg-gray-800 shadow-md rounded-2xl overflow-hidden transition duration-300 ease-in-out transform hover:scale-105 ">
+        <h2 class="mb-6 text-3xl font-extrabold text-gray-900 dark:text-white text-center ">Create a New Project</h2>
+        <form [formGroup]="projectForm" (ngSubmit)="addProject()" class="">
             <div class="grid gap-6 mb-6">
                 <div class="flex items-center space-x-4">
                     <input type="text" formControlName="name" name="name" id="name" class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-lg rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 focus:outline-none transition duration-300 ease-in-out transform" placeholder="Enter Project Name" required>
