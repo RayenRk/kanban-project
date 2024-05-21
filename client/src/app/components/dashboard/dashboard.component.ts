@@ -25,20 +25,23 @@ import {MatButtonModule} from '@angular/material/button';
 export class DashboardComponent implements OnInit {
   projects$!: Observable<any>;
   userRole!: string | null;
+  isLoggedIn: boolean = false;
 
   constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
+
     // Check if user is authenticated before fetching projects
     if (this.apiService.isLoggedIn()) {
       this.fetchProjects();
       this.apiService.getUserIdFromLocalStorage();
     } else {
       // Handle unauthenticated user
-      console.error('User is not authenticated.');
+      // console.error('User is not authenticated.');
     }
 
     this.userRole = this.apiService.getUserRole();
+    this.isLoggedIn = this.apiService.isLoggedIn();
   }
 
   fetchProjects(): void {

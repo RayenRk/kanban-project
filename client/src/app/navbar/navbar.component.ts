@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Navbar initialized');
+    //console.log('Navbar initialized');
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.showNavbar = !['/login', '/register'].includes(event.urlAfterRedirects);
@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
   
     // Subscribe to changes in login status
     this.apiService.loginStatus.subscribe((loggedIn) => {
-      console.log('Login status changed:', loggedIn);
+      //console.log('Login status changed:', loggedIn);
       this.isLoggedIn = loggedIn;
       this.username = this.apiService.getUsername();
       this.userId = this.apiService.getUserIdFromLocalStorage();
