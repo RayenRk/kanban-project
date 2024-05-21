@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { ApiService } from './services/kanban-api.service';
@@ -12,8 +11,8 @@ export class AuthGuard implements CanActivate {
     ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-       
-    
+
+
       const currentUser  = this.authService.getRole();
       if (currentUser) {
           const allowedRoles : string []= route.data['roles'] as Array<string>;
@@ -21,14 +20,14 @@ export class AuthGuard implements CanActivate {
              this.router.navigate(['/home']);
               return false;
           }
-         
+
           return true;
-          
+
       }
 
-      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+      this.router.navigate(['/home'], { queryParams: { returnUrl: state.url } });
       return false;
      
   }
-  
+
 }

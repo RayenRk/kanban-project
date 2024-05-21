@@ -3,7 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { User } from '../models/users';
+import { Task } from '../models/tasks';
+import e from 'express';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +44,13 @@ export class ApiService {
     return null;
   }
 
+  getUserRole(): string | null {
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('role');
+    }
+    return null;
+  }
+
   isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }  
@@ -66,10 +74,12 @@ export class ApiService {
         const decodedToken = this.jwtHelper.decodeToken(token);
         localStorage.setItem('userId', decodedToken?.userId || '');
         localStorage.setItem('username', decodedToken?.username || '');
+        localStorage.setItem('role', decodedToken?.role || '');
       } else {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
+        localStorage.removeItem('role');
       }
       this.loggedInStatus.next(this.isLoggedIn());
     }
@@ -92,7 +102,6 @@ export class ApiService {
     }
     return headers;
   }
-  
 
   register(userData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/register`, userData).pipe(
@@ -103,15 +112,13 @@ export class ApiService {
     );
   }
 
-
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}api/auth/login`, credentials).pipe(
       tap(response => {
         this.setToken(response.token);
         this.loggedInStatus.next(true); 
         localStorage.setItem('role', response.role);
-        localStorage.setItem('loggedIn', JSON.stringify(true)); // or false
-
+        localStorage.setItem('loggedIn', JSON.stringify(true));
       }),
       catchError((error) => {
         console.error('Login error:', error);
@@ -134,10 +141,17 @@ export class ApiService {
       })
     );
   }
+
+  getRole(): string | null {
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('role');
+    }
+    return null;
+  }
   
-  getAllUsers(): Observable<User[]> {
+  getAllUsers(): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.get<User[]>(`${this.apiUrl}api/user/getAllUser`, { headers })
+    return this.http.get<any>(`${this.apiUrl}api/user/getAllUser`, { headers })
       .pipe(
         catchError(error => {
           console.error('Get all users error:', error);
@@ -145,16 +159,11 @@ export class ApiService {
         })
       );
   }
-  
-  getRole(): string | null {
-    if (this.isLocalStorageAvailable()) {
-      return localStorage.getItem('role');
-    }
-    return null;
-  }
 
-  getUserById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}users/${id}`).pipe(
+  getUserById(): Observable<any> {
+    const headers = this.getAuthHeaders();
+    const userId = this.getUserIdFromLocalStorage();
+    return this.http.get<any>(`${this.apiUrl}api/user/getuser/${userId}`, { headers }).pipe(
       catchError((error) => {
         console.error('Get user by ID error:', error);
         return throwError(error);

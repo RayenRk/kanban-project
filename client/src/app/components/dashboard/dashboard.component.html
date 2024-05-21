@@ -4,6 +4,17 @@
   <div class="absolute bottom-0 right-0 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-2000"></div>
   <div class="absolute top-0 right-0 w-64 h-64 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
 
+    <!-- Hero Section -->
+  <div *ngIf="!isLoggedIn" class="flex flex-row-reverse gap-40 justify-center items-center text-center py-20 px-20 space-y-6 animate__animated animate__fadeIn">
+    <img src="../../../assets/images/undraw_add_tasks_re_s5yj.svg" alt="Kanban Illustration" class="w-1/2 max-w-xl mb-8 pt-10">
+    <div class="flex flex-col items-center justify-center gap-6">
+    <h1 class="text-9xl font-bold text-white mb-4 ">Welcome to Kanban Board</h1>
+    <p class="text-lg text-gray-200 mb-6 max-w-xl text-pretty">Organize your tasks and projects effortlessly with our intuitive Kanban Board. Stay on top of your work, collaborate with ease, and boost productivity!</p>
+    <a href="/login" class="bg-white text-blue-500 font-semibold py-3 px-6 rounded-lg shadow-lg transition hover:scale-105">Get Started</a>
+    <a href="/register" class="mt-4 text-gray-100 underline animate__animated animate__fadeIn animate__delay-1s hover:text-white hover:scale-105">Don't have an account? Sign up here</a>
+    </div>
+  </div>
+
   <!-- Project Cards -->
   
   <div class="max-w-6xl grid grid-cols-3 gap-8 p-8">
@@ -13,7 +24,7 @@
       <div class="pt-4 pl-6 pr-6 pb-6 flex flex-col justify-center items-left">
         <div class="flex flex-row justify-center items-center">
           <h2 class="text-xl font-bold text-gray-900 dark:text-white pt-4 flex-grow">{{ project.name }}</h2>
-          <button mat-icon-button color="warn" (click)="removeProject($event, project._id)">
+          <button *ngIf="userRole !=='user'" mat-icon-button color="warn" (click)="removeProject($event, project._id)">
             <mat-icon>delete</mat-icon>
           </button>         
         </div>

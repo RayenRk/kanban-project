@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ApiService } from '../services/kanban-api.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,13 +13,15 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+
+  @Input() currentUser: any;
   showNavbar: boolean = true;
   isLoggedIn: boolean = false;
   username: string | null = null;
   userId: string | null = null;
   mobileMenuOpen: boolean = false;
   currentUrl: string | undefined;
-  role: string | null = null;
+  userRole!: string | null;
 
   constructor(private router: Router, private apiService: ApiService) {
     this.router.events.subscribe((event) => {
@@ -29,28 +31,30 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-    ngOnInit() {
-      console.log('Navbar initialized');
-      this.router.events.subscribe((event) => {
-        if (event instanceof NavigationEnd) {
-          this.showNavbar = !['/login', '/register'].includes(event.urlAfterRedirects);
-        }
-      });
+  ngOnInit() {
+    //console.log('Navbar initialized');
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.showNavbar = !['/login', '/register'].includes(event.urlAfterRedirects);
+      }
+    });
   
     // Check login status initially
-    const loggedIn = localStorage.getItem('loggedIn');
-    this.isLoggedIn = loggedIn ? JSON.parse(loggedIn) : null;    
-    console.log('Initial login status:', this.isLoggedIn);
+    this.isLoggedIn = this.apiService.isLoggedIn();
     this.username = this.apiService.getUsername();
     this.userId = this.apiService.getUserIdFromLocalStorage();
-    this.role = this.apiService.getRole();
+  
     // Subscribe to changes in login status
     this.apiService.loginStatus.subscribe((loggedIn) => {
-      console.log('Login status changed:', loggedIn);
+      //console.log('Login status changed:', loggedIn);
       this.isLoggedIn = loggedIn;
       this.username = this.apiService.getUsername();
       this.userId = this.apiService.getUserIdFromLocalStorage();
     });
+
+    this.userRole = this.apiService.getUserRole();
+    
+
   }
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;

@@ -1,20 +1,19 @@
-<form [formGroup]="taskForm" (submit)="newTask()">
-    <h2 mat-dialog-title>Add New Task</h2>
+<form [formGroup]="taskForm" (submit)="newTask()" class="bg-white rounded-lg shadow-lg p-6">
+    <h2 mat-dialog-title class="text-2xl font-bold mb-4">Add New Task</h2>
     <mat-dialog-content>
-        <mat-form-field class="example-full-width">
-            <mat-label class="example-full-width">New Task</mat-label>
-            <input matInput formControlName="name" id="name">
-        </mat-form-field>
-        <mat-form-field class="example-full-width">
-            <mat-label class="example-full-width">Description</mat-label>
-            <textarea matInput formControlName="description" id="description"></textarea>
-        </mat-form-field>
-        <input formControlName="status" id="status" value="inprogress" type="hidden">
-    <mat-dialog-actions>
-        <div class="container flex justify-center items-center">
-            <button mat-button mat-dialog-close onclick="close()">Cancel</button>
-            <button mat-button mat-dialog-close cdkFocusInitial type="submit">Add</button>
-        </div>
-    </mat-dialog-actions>
+      <mat-form-field class="w-full mb-4">
+        <mat-label>New Task</mat-label>
+        <input matInput formControlName="name" id="name" class="border border-gray-300 rounded-lg p-2">
+      </mat-form-field>
+      <mat-form-field class="w-full mb-4">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" id="description" rows="4" class="border border-gray-300 rounded-lg p-2"></textarea>
+      </mat-form-field>
+      <input formControlName="status" id="status" value="inprogress" type="hidden">
     </mat-dialog-content>
-    </form>
+    <mat-dialog-actions class="flex justify-between w-full">
+      <button mat-button mat-dialog-close class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-300">Cancel</button>
+      <button mat-button mat-dialog-close cdkFocusInitial type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Add</button>
+    </mat-dialog-actions>
+  </form>
+  

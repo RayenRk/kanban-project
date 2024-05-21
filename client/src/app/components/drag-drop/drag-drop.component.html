@@ -1,68 +1,69 @@
-<div class="container flex gap-0 flex-col justify-start text-left pl-40 pt-6 h-1 text-xl">
-    <h3>Welcome back <b>{{ username | titlecase }}</b> to Project: <b>{{projectname}}</b></h3>
-    <h4></h4>
-  </div>
-  
-  <div class="container flex flex-col justify-center items-center pt-20">
-    <div cdkDropListGroup>
-      <div class="example-container">
-        <h2 class="text-2xl text-amber-700 mb-2">To do</h2>
-  
-        <div cdkDropList id="todoList" [cdkDropListData]="todo" class="example-list" (cdkDropListDropped)="drop($event)">
-          @for (item of todo; track item) {
-          <div class="example-box" cdkDrag>{{item.name}}
-            <button mat-icon-button color="warn" (click)="deleteTask(item._id ?? '')">
-              <mat-icon>delete</mat-icon>
-            </button>
+<div class="flex flex-col justify-center items-center pt-20">
+  <div class="flex flex-col justify-end items-center text-center pb-6">
+    <h3 class="text-2xl font-semibold mb-2">Welcome back <span class="text-blue-600">{{ username | titlecase }}</span> to Project: <span class="text-green-600">{{ projectname }}</span></h3>
+  </div>  
+  <div cdkDropListGroup class="flex flex-wrap gap-6">
+    <!-- To Do List -->
+    <div class="example-container bg-gray-100 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-lg">
+      <h2 class="text-2xl text-amber-700 mb-4 p-4">To do</h2>
+      <div cdkDropList id="todoList" [cdkDropListData]="todo" class="example-list p-4" (cdkDropListDropped)="drop($event)">
+        <div *ngFor="let item of todo; trackBy: trackByFn" class="example-box flex justify-between items-center p-4 bg-white shadow-md rounded-lg mb-4 hover:bg-gray-100 transition duration-300 transform hover:scale-105 cursor-pointer" cdkDrag (click)="openTaskDialog(item)">
+          <div class="flex items-center">
+            <span class="material-icons text-yellow-500 mr-3">pending_actions</span>
+            <span class="font-semibold text-gray-700">{{item.name}}</span>
           </div>
-          }
-          <div class="container flex justify-center items-center pt-2">
-            <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogTodo('0ms', '0ms')">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
+          <button mat-icon-button color="warn" (click)="deleteTask($event, item._id ?? ''); $event.stopPropagation();" class="hover:text-red-600 transition-colors duration-200">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-        
+        <div class="flex justify-center items-center pt-4">
+          <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogTodo('0ms', '0ms')" class="hover:text-blue-600 transition-colors duration-200">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
       </div>
-  
-      <div class="example-container">
-        <h2 class="text-2xl text-sky-700 mb-2">In Progress</h2>
-  
-        <div id="progressList" cdkDropList [cdkDropListData]="progress" class="example-list" (cdkDropListDropped)="drop($event)">
-          @for (item of progress; track item) {
-          <div class="example-box" cdkDrag>{{item.name}}
-            <button mat-icon-button color="warn" (click)="deleteTask(item._id ?? '')">
-              <mat-icon>delete</mat-icon>
-            </button>
+    </div>
+
+    <!-- In Progress List -->
+    <div class="example-container bg-gray-100 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-lg">
+      <h2 class="text-2xl text-sky-700 mb-4 p-4">In Progress</h2>
+      <div id="progressList" cdkDropList [cdkDropListData]="progress" class="example-list p-4" (cdkDropListDropped)="drop($event)">
+        <div *ngFor="let item of progress; trackBy: trackByFn" class="example-box flex justify-between items-center p-4 bg-white shadow-md rounded-lg mb-4 hover:bg-gray-100 transition duration-300 transform hover:scale-105 cursor-pointer" cdkDrag (click)="openTaskDialog(item)">
+          <div class="flex items-center">
+            <span class="material-icons text-blue-500 mr-3">play_circle_filled</span>
+            <span class="font-semibold text-gray-700">{{item.name}}</span>
           </div>
-          }
-          <div class="container flex justify-center items-center pt-2">
-            <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogInprogress('0ms', '0ms')">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
+          <button mat-icon-button color="warn" (click)="deleteTask($event, item._id ?? ''); $event.stopPropagation();" class="hover:text-red-600 transition-colors duration-200">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-        
+        <div class="flex justify-center items-center pt-4">
+          <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogInprogress('0ms', '0ms')" class="hover:text-blue-600 transition-colors duration-200">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
       </div>
-  
-      <div class="example-container">
-        <h2 class="text-2xl text-green-700 mb-2">Done</h2>
-  
-        <div id="doneList" cdkDropList [cdkDropListData]="done" class="example-list" (cdkDropListDropped)="drop($event)">
-          @for (item of done; track item) {
-          <div class="example-box" cdkDrag>{{item.name}}
-            <button mat-icon-button color="warn" (click)="deleteTask(item._id ?? '')">
-              <mat-icon>delete</mat-icon>
-            </button>
+    </div>
+
+    <!-- Done List -->
+    <div class="example-container bg-gray-100 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-lg">
+      <h2 class="text-2xl text-green-700 mb-4 p-4">Done</h2>
+      <div id="doneList" cdkDropList [cdkDropListData]="done" class="example-list p-4" (cdkDropListDropped)="drop($event)">
+        <div *ngFor="let item of done; trackBy: trackByFn" class="example-box flex justify-between items-center p-4 bg-white shadow-md rounded-lg mb-4 hover:bg-gray-100 transition duration-300 transform hover:scale-105 cursor-pointer" cdkDrag (click)="openTaskDialog(item)">
+          <div class="flex items-center">
+            <span class="material-icons text-green-500 mr-3">check_circle</span>
+            <span class="font-semibold text-gray-700">{{item.name}}</span>
           </div>
-          }
-          <div class="container flex justify-center items-center pt-2">
-            <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogDone('0ms', '0ms')">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
+          <button mat-icon-button color="warn" (click)="deleteTask($event, item._id ?? ''); $event.stopPropagation();" class="hover:text-red-600 transition-colors duration-200">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-        
+        <div class="flex justify-center items-center pt-4">
+          <button mat-icon-button matTooltip="Primary" color="primary" (click)="openDialogDone('0ms', '0ms')" class="hover:text-blue-600 transition-colors duration-200">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   </div>
+</div>
