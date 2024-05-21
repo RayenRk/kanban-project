@@ -34,6 +34,7 @@ username: any;
           this.showSuccessAlert = true; // Show the success alert
           setTimeout(() => {
             this.showSuccessAlert = false; // Hide the success alert after 3 seconds
+            window.location.href = '/home'; // Redirect to the home page
           }, 1000);
         },
         (error) => {

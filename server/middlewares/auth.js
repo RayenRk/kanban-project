@@ -29,7 +29,7 @@ const authenticate = (req, res, next) => {
 
 const authorize = async (req, res, next) => {
     const { role } = req.user;
-    if (role !== 'admin') {
+    if (role !== 'admin' && role !== 'po') {
         return res.status(403).json({ message: 'You are not authorized' });
     }
     next();
